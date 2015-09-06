@@ -1,3 +1,4 @@
+import config from '../configs/config';
 import DocStore from '../stores/DocStore';
 
 export default function (context, route, done) {
@@ -10,7 +11,7 @@ export default function (context, route, done) {
         return done(err404);
     }
 
-    let pageTitle = routeConfig.pageTitle || (routeConfig.pageTitlePrefix + ' | Atomic CSS');
+  let pageTitle = routeConfig.pageTitle || (routeConfig.pageTitlePrefix + ' | ' + config.appTitle);
 
     // Load from cache
     let docFromCache = context.getStore(DocStore).get(githubPath);

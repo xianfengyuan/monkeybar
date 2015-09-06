@@ -1,4 +1,4 @@
 export default {
-  appTitle: 'atomic web',
+  appTitle: 'An acss web',
   appUrl: 'https://github.com/xianfengyuan/monkeybar'
 };

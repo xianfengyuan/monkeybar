@@ -3,6 +3,8 @@
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
 
+import config from '../configs/config';
+
 import showDoc from '../actions/showDoc';
 import showPage from '../actions/showPage';
 import PageHome from '../components/PageHome';
@@ -17,7 +19,7 @@ export default {
         component: PageHome,
         githubPath: '/docs/home.md',
         action: showDoc,
-        pageTitle: 'Atomic CSS',
+      pageTitle: config.appTitle,
         page: 'home'
     },
 
