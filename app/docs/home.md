@@ -9,25 +9,6 @@
 <p>Simply installing [Atomizer](/guides/atomizer.html) in your project <em>does not</em> add any bytes to your pages (there is no &quot;entry cost&quot;). &mdash; which means **Atomic can be used with any project at any time**</p>
 </div>
 
-## Colors
-
-<div class="Row">
-    <div class="Fl(start) W(60%) Fl(n)--xs W(a)--xs">
-        Colors are set using hexadecimal values. Alpha transparency is created by appending the opacity value to the `hex` color.
-    </div>
-    <div class="Fl(start) W(60%) Cl(b) Fl(n)--xs W(a)--xs">
-<pre><code class="lang-css">&lt;div class="Bgc(#<span class="hljs-number">0280ae</span>.<span class="hljs-number">5</span>) C(#fff) P(<span class="hljs-number">20</span>px)"&gt;
-    <span class="hljs-comment">Lorem ipsum</span>
-&lt;/div&gt;
-</code></pre>
-    </div>
-    <div class="Fl(end) W(30%) My(1em) Fl(n)--xs W(a)--xs">
-        <div class="Bgc(#0280ae.5) C(#fff) P(20px)">
-            Lorem ipsum
-        </div>
-    </div>
-</div>
-
 ## Helpers
 
 <div class="Row">
