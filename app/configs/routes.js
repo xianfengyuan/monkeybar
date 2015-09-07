@@ -7,9 +7,12 @@ import config from '../configs/config';
 
 import showDoc from '../actions/showDoc';
 import showPage from '../actions/showPage';
+import showStacks from '../actions/showStacks';
+
 import PageHome from '../components/PageHome';
 import PageDocs from '../components/PageDocs';
 import PageReference from '../components/PageReference';
+import PageStacks from '../components/PageStacks';
 
 export default {
     // home
@@ -21,6 +24,14 @@ export default {
         action: showDoc,
       pageTitle: config.appTitle,
         page: 'home'
+    },
+    stacks: {
+        path: '/stacks',
+        method: 'get',
+        component: PageStacks,
+        action: showStacks,
+        pageTitlePrefix: 'Stacks',
+        page: 'stacks'
     },
 
     // docs - root
