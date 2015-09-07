@@ -16,6 +16,9 @@ import {navigateAction} from 'flux-router-component';
 import show404 from './actions/show404';
 import show500 from './actions/show500';
 
+import docs from './services/docs';
+import stacks from './services/stacks';
+
 // components
 import Html from './components/Html';
 
@@ -61,7 +64,8 @@ SERVER.use(csrf({cookie: true}));
 var fetchrPlugin = app.getPlugin('FetchrPlugin');
 
 // Register our services
-fetchrPlugin.registerService(require('./services/docs'));
+fetchrPlugin.registerService(docs);
+fetchrPlugin.registerService(stacks);
 
 // Set up the fetchr middleware
 SERVER.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
