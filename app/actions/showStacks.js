@@ -2,13 +2,18 @@
  * Copyright 2015, Xianfeng Yuan.
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
+import debugLib from 'debug';
 import config from '../configs/config';
 import StackStore from '../stores/StackStore';
+
+const debug = debugLib('StackAction');
 
 export default function (context, route, done) {
   let routeConfig = route.config || {};
   let pageTitle = routeConfig.pageTitle || (routeConfig.pageTitlePrefix + ' | ' + config.appTitle);
   let service = routeConfig.service;
+
+  debug(service);
   
   let stackFromCache = context.getStore(StackStore).get(service);
   

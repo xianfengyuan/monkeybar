@@ -34,11 +34,11 @@ var Stacks = React.createClass({
         var items = '';
         if (Object.keys(data).length) {
             var stacks = data.content;
-            stacks.map(function (stack) {
-                var displayclassDefinitions = "Ov(h) D(n)";
+            items = stacks.map(function (stack) {
+                var displayclassDefinitions = "Bgc(#0280ae.5) C(#fff) P(20px)";
                 return (
-                    <div key={'id-' + stack.Name} className={displayclassDefinitions}>
-                        <dl className="M(0) Mstart(20px) P(10px) Pt(0) Ff(m)">{stack.Name}</dl>
+                    <div key={'id-' + stack.Name}>
+                        {stack.Name}
                     </div>
                 );
                 

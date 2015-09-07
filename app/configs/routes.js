@@ -31,7 +31,8 @@ export default {
         component: PageStacks,
         action: showStacks,
         pageTitlePrefix: 'Stacks',
-        page: 'stacks'
+      page: 'stacks',
+      service: 'opsworks'
     },
 
     // docs - root

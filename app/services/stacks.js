@@ -2,13 +2,15 @@
  * Copyright 2015, Xianfeng Yuan.
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
-
+import debugLib from 'debug';
 import marked from 'marked';
 import fs from 'fs';
 import highlight from 'highlight.js';
 
 import renderer from './../utils/renderer';
 import config from '../configs/config';
+
+const debug = debugLib('StackService');
 
 marked.setOptions({
   highlight: (code) => {
@@ -21,6 +23,7 @@ let cache = {};
 
 let fetchAPI = function (params, cb) {
   let service = params.service;
+  debug(service);
   let apiPath = config.gdir(service);
 
   fs.readFile(apiPath, function(err, data) {
@@ -41,6 +44,8 @@ let fetchAPI = function (params, cb) {
       }
     });
 
+    debug(items.length);
+    
     if (items.length) {
       cache[service] = {
         key: service,
