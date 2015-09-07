@@ -9,6 +9,7 @@ import highlight from 'highlight.js';
 
 import renderer from './../utils/renderer';
 import config from '../configs/config';
+import routes from '../configs/routes';
 
 const debug = debugLib('StackService');
 
@@ -63,6 +64,20 @@ let fetchAPI = function (params, cb) {
     }
   });
 };
+
+(function refreshService() {
+  Object.keys(routes).forEach(function (routeName) {
+    var service = routes[routeName].service;
+    if (service) {
+      debug('refreshing ' + service);
+      fetchAPI({
+        service: service
+      });
+    }
+  });
+  
+  setInterval(refreshService, 60 * 60 * 1000); // one hour
+})();
 
 export default {
   name: 'stacks',
