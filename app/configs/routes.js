@@ -7,9 +7,11 @@ import config from '../configs/config';
 
 import showDoc from '../actions/showDoc';
 import showPage from '../actions/showPage';
+import showStacks from '../actions/showStacks';
 import PageHome from '../components/PageHome';
 import PageDocs from '../components/PageDocs';
 import PageReference from '../components/PageReference';
+import PageOps from '../components/PageOps';
 
 export default {
     // home
@@ -117,7 +119,15 @@ export default {
         pageTitlePrefix: 'Tutorials: RWD',
         page: 'docs'
     },
-
+    stacks: {
+        path: '/stacks',
+        method: 'get',
+        component: PageOps,
+        service: 'opsworks',
+        action: showStacks,
+        pageTitlePrefix: 'OpsWorks Stacks',
+        page: 'opsworks'
+    },
     // reference
     reference: {
         path: '/reference',

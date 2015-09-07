@@ -23,7 +23,7 @@ class Nav extends React.Component {
                     <NavLink routeName="quickStart" className="D(b) C(#fff) Td(n):h">Docs</NavLink>
                 </li>
                 <li className={cx({'selected': selected === 'reference', 'D(ib) Va(m) Pos(r) Mstart(10px)': true})}>
-                    <NavLink routeName="reference" className="D(b) C(#fff) Td(n):h">Reference</NavLink>
+                    <NavLink routeName="reference" className="D(b) C(#fff) Td(n):h">OpsWorks Stacks</NavLink>
                 </li>
                 <li className="D(ib) Mstart(10px) Pos(r)">
                     <a className="D(b) C(#fff) Td(n):h" href={config.appUrl}>

@@ -62,6 +62,7 @@ var fetchrPlugin = app.getPlugin('FetchrPlugin');
 
 // Register our services
 fetchrPlugin.registerService(require('./services/docs'));
+fetchrPlugin.registerService(require('./services/stacks'));
 
 // Set up the fetchr middleware
 SERVER.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
