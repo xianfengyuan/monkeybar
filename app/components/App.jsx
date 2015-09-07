@@ -14,58 +14,29 @@ import assets from '../utils/assets';
 import Nav from './Nav';
 import Status500 from './Status500';
 import Status404 from './Status404';
-import PageOps from './PageOps';
 
-// stores
-import ApplicationStore from '../stores/ApplicationStore';
-import DocStore from '../stores/DocStore';
-import StackStore from '../stores/StackStore';
+import { provideContext, connectToStores } from 'fluxible-addons-react';
+import { handleHistory, NavLink } from 'fluxible-router';
 
-// mixins
-import {RouterMixin} from 'flux-router-component';
-import {NavLink} from 'flux-router-component';
-import {FluxibleMixin} from 'fluxible/addons';
+class App extends React.Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.isNavigateComplete;
+    }
 
-var App = React.createClass({
-    mixins: [RouterMixin, FluxibleMixin],
+    render() {
+        var Handler = this.props.currentRoute && this.props.currentRoute.get('handler');
+        var routeName = this.props.currentRoute && this.props.currentRoute.get('name');
 
-    statics: {
-        storeListeners: [ApplicationStore]
-    },
-
-    getInitialState: function () {
-        return this.getState();
-    },
-
-    getState: function () {
-        var appStore = this.getStore(ApplicationStore);
-        var docStore = this.getStore(DocStore);
-        var stackStore = this.getStore(StackStore);
-        return {
-            currentDoc: docStore.getCurrent() || {},
-            currentStack: stackStore.getCurrent() || {},
-            currentPageName: appStore.getCurrentPageName(),
-            pageTitle: appStore.getPageTitle(),
-            route: appStore.getCurrentRoute() || {}
-        };
-    },
-
-    onChange: function () {
-        this.setState(this.getState());
-    },
-
-    render: function () {
-        var Component = this.state.route && this.state.route.config && this.state.route.config.component;
-        var Handler = (<Component doc={this.state.currentDoc} currentRoute={this.state.route} />);
-
-        if (Component) {
-            if ('500' === this.state.currentPageName) {
-                Handler = (<Status500 />);
-            } else if ('404' === this.state.currentPageName) {
-                Handler = (<Status404 />);
-            } else if ('opsworks' === this.state.currentPageName) {
-                Handler = (<PageOps doc={this.state.currentDoc} currentRoute={this.state.route} />);
+        if (Handler) {
+            if (this.props.currentNavigateError) {
+                Handler = <Status500 />;
             }
+            else {
+                Handler = <Handler currentDoc={this.props.currentDoc} />;
+            }
+        }
+        else {
+            Handler = <Status404 />;
         }
         
         // Keep <a> and <Nav> in the same line to enforce white-space between them
@@ -78,10 +49,10 @@ var App = React.createClass({
                                 <b className="D(n)--xs home_D(b) home_Cur(t)">{config.appTitle}</b>
                                 <img id="logo" className="H(30px) Mt(1px) D(n)--sm home_D(n) docs_Mstart(40px)" alt='atomic css' src={assets['images/atomic-css-logo.png']} />
 
-                            </NavLink> <Nav selected={this.state.route.name} />
+                            </NavLink> <Nav selected={routeName} currentRoute={this.props.currentRoute} />
                         </div>
                     </div>
-                    <Component doc={this.state.currentDoc} currentRoute={this.state.route} />
+                    {Handler}
                 </div>
                 <div id="footer" className="Py(16px) Px(20px) BdT Bdc(#0280ae.3)" role="footer">
                     <div className="innerwrapper SpaceBetween Mx(a)--sm Maw(1000px)--sm W(90%)--sm W(a)--sm">
@@ -90,20 +61,21 @@ var App = React.createClass({
                 </div>
             </div>
         );
-    },
-    componentDidUpdate: function (prevProps, prevState) {
-        var newState = this.state;
-
-        // update class in html
-        document.documentElement.className = document.documentElement.className.replace(prevState.currentPageName, newState.currentPageName);
-
-        if (newState.pageTitle === prevState.pageTitle) {
-            return;
-        }
-
-        // update page title
-        document.title = newState.pageTitle;
+    }
+    componentDidUpdate(prevProps, prevState) {
+        document.title = this.props.currentTitle;
      }
+}
+
+App = connectToStores(App, ['DocStore'], function (context, props) {
+    return {
+        currentTitle: context.getStore('DocStore').getCurrentTitle() || '',
+        currentDoc: context.getStore('DocStore').getCurrent() || ''
+    };
 });
+
+App = handleHistory(App);
+
+App = provideContext(App);
 
 export default App;

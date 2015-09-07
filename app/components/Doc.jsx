@@ -6,7 +6,7 @@
 
 // external packages
 import React from 'react';
-import {navigateAction} from 'flux-router-component';
+import {navigateAction} from 'fluxible-router';
 
 import config from '../configs/config';
 
@@ -46,10 +46,11 @@ class Doc extends React.Component {
     render() {
         let editEl = '';
         let title = '';
-
-        if (this.props.currentRoute && this.props.currentRoute.config.githubPath !== -1) {
+        let path = this.props.currentRoute.get('githubPath');
+        
+        if (this.props.currentRoute && path !== -1) {
             editEl = (
-                <a href={DOCS_URL + this.props.currentRoute.config.githubPath} className="D(ib) Va(m) Mt(30px)" target='_blank'>
+                <a href={DOCS_URL + path} className="D(ib) Va(m) Mt(30px)" target='_blank'>
                     Edit on Github
                 </a>
             )
@@ -63,21 +64,24 @@ class Doc extends React.Component {
             );
         }
 
+        let markup = (this.props.currentDoc && this.props.currentDoc.content) || '';
+        
         return (
             <div id="main" role="main" className="D(tbc)--sm home_D(b)! Px(10px) menu-on_Pos(f)">
                 {title}
-                <div onClick={this.onClick} dangerouslySetInnerHTML={{__html: this.props.content}}></div>
+                <div onClick={this.onClick.bind(this)} dangerouslySetInnerHTML={{__html: markup}}></div>
             </div>
         );
     }
 }
 
-Doc.defaultProps = {
-    content: ''
-};
-
 Doc.contextTypes = {
     executeAction: React.PropTypes.func
+};
+
+Doc.propTypes = {
+    currentDoc: React.PropTypes.object.isRequired,
+    currentRoute: React.PropTypes.object.isRequired
 };
 
 export default Doc;

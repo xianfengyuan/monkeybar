@@ -10,15 +10,13 @@ import showPage from '../actions/showPage';
 import showStacks from '../actions/showStacks';
 import PageHome from '../components/PageHome';
 import PageDocs from '../components/PageDocs';
-import PageReference from '../components/PageReference';
-import PageOps from '../components/PageOps';
 
 export default {
     // home
     home: {
         path: '/',
-        method: 'get',
-        component: PageHome,
+        method: 'GET',
+        handler: PageHome,
         githubPath: '/docs/home.md',
         action: showDoc,
       pageTitle: config.appTitle,
@@ -28,8 +26,8 @@ export default {
     // docs - root
     quickStart: {
         path: '/quick-start.html',
-        method: 'get',
-        component: PageDocs,
+        method: 'GET',
+        handler: PageDocs,
         githubPath: '/docs/quick-start.md',
         action: showDoc,
         pageTitlePrefix: 'Quick Start',
@@ -37,8 +35,8 @@ export default {
     },
     thinkingInAtomic: {
         path: '/thinking-in-atomic.html',
-        method: 'get',
-        component: PageDocs,
+        method: 'GET',
+        handler: PageDocs,
         githubPath: '/docs/thinking-in-atomic.md',
         action: showDoc,
         pageTitlePrefix: 'Thinking in Atomic',
@@ -46,8 +44,8 @@ export default {
     },
     faq: {
         path: '/frequently-asked-questions.html',
-        method: 'get',
-        component: PageDocs,
+        method: 'GET',
+        handler: PageDocs,
         githubPath: '/docs/frequently-asked-questions.md',
         action: showDoc,
         pageTitlePrefix: 'FAQ',
@@ -57,8 +55,8 @@ export default {
     // docs - guides
     atomicClasses: {
         path: '/guides/atomic-classes.html',
-        method: 'get',
-        component: PageDocs,
+        method: 'GET',
+        handler: PageDocs,
         githubPath: '/docs/guides/atomic-classes.md',
         action: showDoc,
         pageTitlePrefix: 'Guides: Atomic classes',
@@ -66,8 +64,8 @@ export default {
     },
     helperClasses: {
         path: '/guides/helper-classes.html',
-        method: 'get',
-        component: PageDocs,
+        method: 'GET',
+        handler: PageDocs,
         githubPath: '/docs/guides/helper-classes.md',
         action: showDoc,
         pageTitlePrefix: 'Guides: Helper classes',
@@ -75,8 +73,8 @@ export default {
     },
     shorthand: {
         path: '/guides/shorthand.html',
-        method: 'get',
-        component: PageDocs,
+        method: 'GET',
+        handler: PageDocs,
         githubPath: '/docs/guides/shorthand-notation.md',
         action: showDoc,
         pageTitlePrefix: 'Guides: Shorthand',
@@ -84,8 +82,8 @@ export default {
     },
     syntax: {
         path: '/guides/syntax.html',
-        method: 'get',
-        component: PageDocs,
+        method: 'GET',
+        handler: PageDocs,
         githubPath: '/docs/guides/syntax.md',
         action: showDoc,
         pageTitlePrefix: 'Guides: Thinking in Atomic',
@@ -93,8 +91,8 @@ export default {
     },
     atomizer: {
         path: '/guides/atomizer.html',
-        method: 'get',
-        component: PageDocs,
+        method: 'GET',
+        handler: PageDocs,
         githubPath: '/docs/guides/atomizer.md',
         action: showDoc,
         pageTitlePrefix: 'Guides: Atomizer Tool',
@@ -103,8 +101,8 @@ export default {
     // docs - tutorials
     grid: {
         path: '/tutorials/grid-system.html',
-        method: 'get',
-        component: PageDocs,
+        method: 'GET',
+        handler: PageDocs,
         githubPath: '/docs/tutorials/grid.md',
         action: showDoc,
         pageTitlePrefix: 'Tutorials: Shorthand',
@@ -112,29 +110,11 @@ export default {
     },
     rwd: {
         path: '/tutorials/responsive-web-design.html',
-        method: 'get',
-        component: PageDocs,
+        method: 'GET',
+        handler: PageDocs,
         githubPath: '/docs/tutorials/responsive-web-design.md',
         action: showDoc,
         pageTitlePrefix: 'Tutorials: RWD',
         page: 'docs'
-    },
-    stacks: {
-        path: '/stacks',
-        method: 'get',
-        component: PageOps,
-        service: 'opsworks',
-        action: showStacks,
-        pageTitlePrefix: 'OpsWorks Stacks',
-        page: 'opsworks'
-    },
-    // reference
-    reference: {
-        path: '/reference',
-        method: 'get',
-        component: PageReference,
-        action: showPage,
-        pageTitlePrefix: 'Reference',
-        page: 'reference'
     }
 };

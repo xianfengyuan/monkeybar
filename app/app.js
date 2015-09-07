@@ -7,7 +7,8 @@
 import React from 'react';
 import FluxibleApp from 'fluxible';
 import fetchrPlugin from 'fluxible-plugin-fetchr';
-var RouteStore = require('fluxible-router').RouteStore;
+import { RouteStore } from 'fluxible-router';
+import DocStore from './stores/DocStore';
 
 // configs
 import routes from './configs/routes';
@@ -18,6 +19,8 @@ import App from './components/App';
 // actions
 import show500 from './actions/show500';
 import show404 from './actions/show404';
+
+var MyRouteStore = RouteStore.withStaticRoutes(routes);
 
 const app = new FluxibleApp({
     component: App,
@@ -36,14 +39,8 @@ const app = new FluxibleApp({
     }
 });
 
-var MyRouteStore = RouteStore.withStaticRoutes(routes);
-
 app.plug(fetchrPlugin({ xhrPath: '/_api' }));
+app.registerStore(DocStore);
 app.registerStore(MyRouteStore);
-
-app.registerStore(require('./stores/ApplicationStore'));
-app.registerStore(require('./stores/DocStore'));
-app.registerStore(require('./stores/ReferenceStore'));
-app.registerStore(require('./stores/StackStore'));
 
 export default app;

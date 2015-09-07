@@ -5,7 +5,7 @@
 
 // external packages
 import React from 'react';
-import {NavLink} from 'flux-router-component';
+import {NavLink} from 'fluxible-router';
 
 // other dependencies
 import assets from '../utils/assets';
@@ -29,7 +29,7 @@ class PageHome extends React.Component {
                     </div>
                 </div>
                 <div className='innerwrapper Bxz(bb) Pt(40px) Px(10px) Mb(50px) Mx(a)--sm Maw(1000px)--sm W(90%)--sm W(a)'>
-                    <Doc content={this.props.doc.content} />
+                    <Doc currentDoc={this.props.currentDoc} />
                 </div>
             </div>
         );

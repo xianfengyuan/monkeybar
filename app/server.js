@@ -12,12 +12,13 @@ import bodyParser from 'body-parser';
 import csrf from 'csurf';
 import React from 'react';
 import UAParser from 'ua-parser-js';
-import {navigateAction} from 'flux-router-component';
+import {navigateAction} from 'fluxible-router';
 import show404 from './actions/show404';
 import show500 from './actions/show500';
 
 // components
 import Html from './components/Html';
+import { createElementWithContext } from 'fluxible-addons-react';
 
 // other dependencies
 import app from './app';
@@ -69,7 +70,8 @@ SERVER.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
 
 // Render the app
 function renderApp(req, res, context) {
-    const renderedApp = React.renderToString(context.createElement());
+  const app =  createElementWithContext(context);
+  const renderedApp = React.renderToString(app);
     const exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
     const componentContext = context.getComponentContext();
     const ua = new UAParser().setUA(req.headers['user-agent']).getResult();

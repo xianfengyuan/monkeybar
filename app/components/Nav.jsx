@@ -6,7 +6,7 @@
 // external packages
 import React from 'react';
 import cx from 'classnames';
-import {NavLink} from 'flux-router-component';
+import {NavLink} from 'fluxible-router';
 
 import config from '../configs/config';
 
@@ -21,9 +21,6 @@ class Nav extends React.Component {
             <ul role="navigation" className="Va(m) M(0) P(0)">
                 <li className={cx({'selected': selected !== 'reference' && selected !== 'home', 'D(ib) Va(m) Pos(r)': true})}>
                     <NavLink routeName="quickStart" className="D(b) C(#fff) Td(n):h">Docs</NavLink>
-                </li>
-                <li className={cx({'selected': selected === 'reference', 'D(ib) Va(m) Pos(r) Mstart(10px)': true})}>
-                    <NavLink routeName="reference" className="D(b) C(#fff) Td(n):h">OpsWorks Stacks</NavLink>
                 </li>
                 <li className="D(ib) Mstart(10px) Pos(r)">
                     <a className="D(b) C(#fff) Td(n):h" href={config.appUrl}>
