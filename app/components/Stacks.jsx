@@ -30,16 +30,20 @@ var Stacks = React.createClass({
     },
 
     render: function () {
-        var stacks = this.state.current || {};
-        var items = stacks.map(function (stack) {
-            var displayclassDefinitions = "Ov(h) D(n)";
-            return (
-                <div key={'id-' + stack.Name} className={displayclassDefinitions}>
-                    <dl className="M(0) Mstart(20px) P(10px) Pt(0) Ff(m)">{stack.Name}</dl>
-                </div>
-            );
-
-        }, this);
+        var data = this.state.current;
+        var items = '';
+        if (Object.keys(data).length) {
+            var stacks = data.content;
+            stacks.map(function (stack) {
+                var displayclassDefinitions = "Ov(h) D(n)";
+                return (
+                    <div key={'id-' + stack.Name} className={displayclassDefinitions}>
+                        <dl className="M(0) Mstart(20px) P(10px) Pt(0) Ff(m)">{stack.Name}</dl>
+                    </div>
+                );
+                
+            }, this);
+        }
 
         return (
             <div>

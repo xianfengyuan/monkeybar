@@ -64,6 +64,7 @@ class StackStore extends BaseStore {
 
 StackStore.storeName = 'StackStore';
 StackStore.handlers = {
+  'UPDATE_PAGE_TITLE': '_receiveTitle',
   'RECEIVE_STACK_SUCCESS': '_receiveStack'
 };
 

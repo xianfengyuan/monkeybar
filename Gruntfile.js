@@ -11,6 +11,11 @@ function escapeRegex(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
 
+var nodemonArgs = [];
+if (process.env.DEBUGGER) {
+    nodemonArgs.push('--debug');
+}
+
 module.exports = function(grunt) {
     // Load grunt tasks automatically
     require('load-grunt-tasks')(grunt);
@@ -94,6 +99,7 @@ module.exports = function(grunt) {
                         PORT: '8081'
                     },
                     ext: 'jsx,js,md',
+                  nodeArgs: nodemonArgs,
                     ignore: ['node_modules/**', 'build/**'],
                     watch: 'app',
                     delay: 1000,

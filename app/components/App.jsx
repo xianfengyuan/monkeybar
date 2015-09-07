@@ -15,12 +15,14 @@ import Nav from './Nav';
 import PageHome from './PageHome';
 import PageDocs from './PageDocs';
 import PageReference from './PageReference';
+import PageStacks from './PageStacks';
 import Status500 from './Status500.jsx';
 import Status404 from './Status404.jsx';
 
 // stores
 import ApplicationStore from '../stores/ApplicationStore';
 import DocStore from '../stores/DocStore';
+import StackStore from '../stores/StackStore';
 
 // mixins
 import {RouterMixin} from 'flux-router-component';
@@ -31,7 +33,7 @@ var App = React.createClass({
     mixins: [RouterMixin, FluxibleMixin],
 
     statics: {
-        storeListeners: [ApplicationStore]
+        storeListeners: [ApplicationStore, StackStore]
     },
 
     getInitialState: function () {
@@ -41,8 +43,11 @@ var App = React.createClass({
     getState: function () {
         var appStore = this.getStore(ApplicationStore);
         var docStore = this.getStore(DocStore);
+        var stackStore = this.getStore(StackStore);
+        
         return {
             currentDoc: docStore.getCurrent() || {},
+            currentStack: stackStore.getCurrent() || {},
             currentPageName: appStore.getCurrentPageName(),
             pageTitle: appStore.getPageTitle(),
             route: appStore.getCurrentRoute() || {}
@@ -55,11 +60,15 @@ var App = React.createClass({
 
     render: function () {
         var Component = this.state.route && this.state.route.config && this.state.route.config.component;
-
+        var Handler = (<Component doc={this.state.currentDoc} currentRoute={this.state.route} />);
+        var routeName = this.state.route.name;
+        
         if ('500' === this.state.currentPageName) {
-            Component = Status500;
+            Handler = (<Status500 />);
         } else if ('404' === this.state.currentPageName) {
-            Component = Status404;
+            Handler = (<Status404 />);
+        } else if (routeName == 'stacks') {
+            Handler = (<PageStacks />);
         }
 
         // Keep <a> and <Nav> in the same line to enforce white-space between them
@@ -75,7 +84,7 @@ var App = React.createClass({
                             </NavLink> <Nav selected={this.state.route.name} />
                         </div>
                     </div>
-                    <Component doc={this.state.currentDoc} currentRoute={this.state.route} />
+                    {Handler}
                 </div>
                 <div id="footer" className="Py(16px) Px(20px) BdT Bdc(#0280ae.3)" role="footer">
                     <div className="innerwrapper SpaceBetween Mx(a)--sm Maw(1000px)--sm W(90%)--sm W(a)--sm">

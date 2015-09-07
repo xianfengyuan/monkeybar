@@ -19,11 +19,11 @@ class Nav extends React.Component {
 
         return (
             <ul role="navigation" className="Va(m) M(0) P(0)">
-                <li className={cx({'selected': selected !== 'reference' && selected !== 'home', 'D(ib) Va(m) Pos(r)': true})}>
+                <li className={cx({'selected': selected !== 'stacks' && selected !== 'home', 'D(ib) Va(m) Pos(r)': true})}>
                     <NavLink routeName="quickStart" className="D(b) C(#fff) Td(n):h">Docs</NavLink>
                 </li>
-                <li className={cx({'selected': selected === 'reference', 'D(ib) Va(m) Pos(r) Mstart(10px)': true})}>
-                    <NavLink routeName="reference" className="D(b) C(#fff) Td(n):h">Reference</NavLink>
+                <li className={cx({'selected': selected === 'stacks', 'D(ib) Va(m) Pos(r) Mstart(10px)': true})}>
+                    <NavLink routeName="stacks" className="D(b) C(#fff) Td(n):h">OpsWorks</NavLink>
                 </li>
                 <li className="D(ib) Mstart(10px) Pos(r)">
                     <a className="D(b) C(#fff) Td(n):h" href={config.appUrl}>

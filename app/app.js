@@ -41,6 +41,7 @@ app.plug(routrPlugin({ routes: routes }));
 
 app.registerStore(require('./stores/ApplicationStore'));
 app.registerStore(require('./stores/DocStore'));
+app.registerStore(require('./stores/StackStore'));
 app.registerStore(require('./stores/ReferenceStore'));
 
 export default app;
