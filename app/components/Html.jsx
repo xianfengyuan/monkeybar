@@ -9,12 +9,34 @@ import React from 'react';
 // other dependencies
 import assets from '../utils/assets';
 
-import { provideContext, connectToStores } from 'fluxible-addons-react';
+// stores
+import ApplicationStore from '../stores/ApplicationStore';
 
-class Html extends React.Component {
-    render() {
+// mixins
+import {FluxibleMixin} from 'fluxible/addons';
+import {RouterMixin} from 'flux-router-component';
+
+var Html = React.createClass({
+    mixins: [RouterMixin, FluxibleMixin],
+
+    getInitialState: function () {
+        return this.getState();
+    },
+
+    getState: function () {
+        var appStore = this.getStore(ApplicationStore);
+
+        return {
+            currentPageName: appStore.getCurrentPageName(),
+            pageTitle: appStore.getPageTitle(),
+            route: appStore.getCurrentRoute() || {}
+        };
+    },
+
+    render: function() {
         let liveReload = this.props.dev ? (<script src={"//localhost:35729/livereload.js"}></script>) : '';
         let ieStylesheet;
+        let className = ['atomic', this.state.currentPageName].join(' ');
 
         // yes, browser sniffing isn't a good idea, but we're taking the pragmatic approach
         // for old IE for server-side rendering.
@@ -23,10 +45,10 @@ class Html extends React.Component {
         }
 
         return (
-            <html className="acss web" lang="en-US">
+            <html className={className} lang="en-US">
                 <head>
                     <meta charSet="UTF-8" />
-                    <title>{this.props.currentTitle}</title>
+                    <title>{this.props.context.getStore(ApplicationStore).getPageTitle()}</title>
                     <meta name="viewport" content="width=device-width, initial-scale=1" />
                     <link rel="stylesheet" href={assets['css/bundle.css']} />
                     <link href="http://fonts.googleapis.com/css?family=Nobile" rel="stylesheet" />
@@ -44,16 +66,6 @@ class Html extends React.Component {
             </html>
         );
     }
-}
-
-Html = connectToStores(Html, ['DocStore'], function (context, props) {
-    return {
-        currentTitle: context.getStore('DocStore').getCurrentTitle() || '',
-        currentDoc: context.getStore('DocStore').getCurrent() || ''
-    };
 });
-
-// and wrap that with context
-Html = provideContext(Html);
 
 export default Html;

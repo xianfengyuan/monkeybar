@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import {NavLink} from 'fluxible-router';
+import {NavLink} from 'flux-router-component';
 
 class Status500 extends React.Component {
     render() {

@@ -5,6 +5,10 @@ export default [
             {
                 label: 'Quick Start',
                 routeName: 'quickStart'
+            },
+            {
+                label: 'FAQ',
+                routeName: 'faq'
             }
         ]
     },
@@ -14,6 +18,14 @@ export default [
             {
                 label: 'Helper classes',
                 routeName: 'helperClasses'
+            },
+            {
+                label: 'The syntax',
+                routeName: 'syntax'
+            },
+            {
+                label: 'Atomizer tool',
+                routeName: 'atomizer'
             }
         ]
     },

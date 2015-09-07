@@ -7,16 +7,16 @@ import config from '../configs/config';
 
 import showDoc from '../actions/showDoc';
 import showPage from '../actions/showPage';
-import showStacks from '../actions/showStacks';
 import PageHome from '../components/PageHome';
 import PageDocs from '../components/PageDocs';
+import PageReference from '../components/PageReference';
 
 export default {
     // home
     home: {
         path: '/',
-        method: 'GET',
-        handler: PageHome,
+        method: 'get',
+        component: PageHome,
         githubPath: '/docs/home.md',
         action: showDoc,
       pageTitle: config.appTitle,
@@ -26,8 +26,8 @@ export default {
     // docs - root
     quickStart: {
         path: '/quick-start.html',
-        method: 'GET',
-        handler: PageDocs,
+        method: 'get',
+        component: PageDocs,
         githubPath: '/docs/quick-start.md',
         action: showDoc,
         pageTitlePrefix: 'Quick Start',
@@ -35,8 +35,8 @@ export default {
     },
     thinkingInAtomic: {
         path: '/thinking-in-atomic.html',
-        method: 'GET',
-        handler: PageDocs,
+        method: 'get',
+        component: PageDocs,
         githubPath: '/docs/thinking-in-atomic.md',
         action: showDoc,
         pageTitlePrefix: 'Thinking in Atomic',
@@ -44,8 +44,8 @@ export default {
     },
     faq: {
         path: '/frequently-asked-questions.html',
-        method: 'GET',
-        handler: PageDocs,
+        method: 'get',
+        component: PageDocs,
         githubPath: '/docs/frequently-asked-questions.md',
         action: showDoc,
         pageTitlePrefix: 'FAQ',
@@ -55,8 +55,8 @@ export default {
     // docs - guides
     atomicClasses: {
         path: '/guides/atomic-classes.html',
-        method: 'GET',
-        handler: PageDocs,
+        method: 'get',
+        component: PageDocs,
         githubPath: '/docs/guides/atomic-classes.md',
         action: showDoc,
         pageTitlePrefix: 'Guides: Atomic classes',
@@ -64,8 +64,8 @@ export default {
     },
     helperClasses: {
         path: '/guides/helper-classes.html',
-        method: 'GET',
-        handler: PageDocs,
+        method: 'get',
+        component: PageDocs,
         githubPath: '/docs/guides/helper-classes.md',
         action: showDoc,
         pageTitlePrefix: 'Guides: Helper classes',
@@ -73,8 +73,8 @@ export default {
     },
     shorthand: {
         path: '/guides/shorthand.html',
-        method: 'GET',
-        handler: PageDocs,
+        method: 'get',
+        component: PageDocs,
         githubPath: '/docs/guides/shorthand-notation.md',
         action: showDoc,
         pageTitlePrefix: 'Guides: Shorthand',
@@ -82,8 +82,8 @@ export default {
     },
     syntax: {
         path: '/guides/syntax.html',
-        method: 'GET',
-        handler: PageDocs,
+        method: 'get',
+        component: PageDocs,
         githubPath: '/docs/guides/syntax.md',
         action: showDoc,
         pageTitlePrefix: 'Guides: Thinking in Atomic',
@@ -91,8 +91,8 @@ export default {
     },
     atomizer: {
         path: '/guides/atomizer.html',
-        method: 'GET',
-        handler: PageDocs,
+        method: 'get',
+        component: PageDocs,
         githubPath: '/docs/guides/atomizer.md',
         action: showDoc,
         pageTitlePrefix: 'Guides: Atomizer Tool',
@@ -101,8 +101,8 @@ export default {
     // docs - tutorials
     grid: {
         path: '/tutorials/grid-system.html',
-        method: 'GET',
-        handler: PageDocs,
+        method: 'get',
+        component: PageDocs,
         githubPath: '/docs/tutorials/grid.md',
         action: showDoc,
         pageTitlePrefix: 'Tutorials: Shorthand',
@@ -110,11 +110,21 @@ export default {
     },
     rwd: {
         path: '/tutorials/responsive-web-design.html',
-        method: 'GET',
-        handler: PageDocs,
+        method: 'get',
+        component: PageDocs,
         githubPath: '/docs/tutorials/responsive-web-design.md',
         action: showDoc,
         pageTitlePrefix: 'Tutorials: RWD',
         page: 'docs'
+    },
+
+    // reference
+    reference: {
+        path: '/reference',
+        method: 'get',
+        component: PageReference,
+        action: showPage,
+        pageTitlePrefix: 'Reference',
+        page: 'reference'
     }
 };

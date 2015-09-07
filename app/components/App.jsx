@@ -12,33 +12,56 @@ import assets from '../utils/assets';
 
 // components
 import Nav from './Nav';
-import Status500 from './Status500';
-import Status404 from './Status404';
+import PageHome from './PageHome';
+import PageDocs from './PageDocs';
+import PageReference from './PageReference';
+import Status500 from './Status500.jsx';
+import Status404 from './Status404.jsx';
 
-import { provideContext, connectToStores } from 'fluxible-addons-react';
-import { handleHistory, NavLink } from 'fluxible-router';
+// stores
+import ApplicationStore from '../stores/ApplicationStore';
+import DocStore from '../stores/DocStore';
 
-class App extends React.Component {
-    shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.isNavigateComplete;
-    }
+// mixins
+import {RouterMixin} from 'flux-router-component';
+import {NavLink} from 'flux-router-component';
+import {FluxibleMixin} from 'fluxible/addons';
 
-    render() {
-        var Handler = this.props.currentRoute && this.props.currentRoute.get('handler');
-        var routeName = this.props.currentRoute && this.props.currentRoute.get('name');
+var App = React.createClass({
+    mixins: [RouterMixin, FluxibleMixin],
 
-        if (Handler) {
-            if (this.props.currentNavigateError) {
-                Handler = <Status500 />;
-            }
-            else {
-                Handler = <Handler currentDoc={this.props.currentDoc} />;
-            }
+    statics: {
+        storeListeners: [ApplicationStore]
+    },
+
+    getInitialState: function () {
+        return this.getState();
+    },
+
+    getState: function () {
+        var appStore = this.getStore(ApplicationStore);
+        var docStore = this.getStore(DocStore);
+        return {
+            currentDoc: docStore.getCurrent() || {},
+            currentPageName: appStore.getCurrentPageName(),
+            pageTitle: appStore.getPageTitle(),
+            route: appStore.getCurrentRoute() || {}
+        };
+    },
+
+    onChange: function () {
+        this.setState(this.getState());
+    },
+
+    render: function () {
+        var Component = this.state.route && this.state.route.config && this.state.route.config.component;
+
+        if ('500' === this.state.currentPageName) {
+            Component = Status500;
+        } else if ('404' === this.state.currentPageName) {
+            Component = Status404;
         }
-        else {
-            Handler = <Status404 />;
-        }
-        
+
         // Keep <a> and <Nav> in the same line to enforce white-space between them
         return (
             <div className="H(100%)">
@@ -49,10 +72,10 @@ class App extends React.Component {
                                 <b className="D(n)--xs home_D(b) home_Cur(t)">{config.appTitle}</b>
                                 <img id="logo" className="H(30px) Mt(1px) D(n)--sm home_D(n) docs_Mstart(40px)" alt='atomic css' src={assets['images/atomic-css-logo.png']} />
 
-                            </NavLink> <Nav selected={routeName} currentRoute={this.props.currentRoute} />
+                            </NavLink> <Nav selected={this.state.route.name} />
                         </div>
                     </div>
-                    {Handler}
+                    <Component doc={this.state.currentDoc} currentRoute={this.state.route} />
                 </div>
                 <div id="footer" className="Py(16px) Px(20px) BdT Bdc(#0280ae.3)" role="footer">
                     <div className="innerwrapper SpaceBetween Mx(a)--sm Maw(1000px)--sm W(90%)--sm W(a)--sm">
@@ -61,21 +84,20 @@ class App extends React.Component {
                 </div>
             </div>
         );
-    }
-    componentDidUpdate(prevProps, prevState) {
-        document.title = this.props.currentTitle;
+    },
+    componentDidUpdate: function (prevProps, prevState) {
+        var newState = this.state;
+
+        // update class in html
+        document.documentElement.className = document.documentElement.className.replace(prevState.currentPageName, newState.currentPageName);
+
+        if (newState.pageTitle === prevState.pageTitle) {
+            return;
+        }
+
+        // update page title
+        document.title = newState.pageTitle;
      }
-}
-
-App = connectToStores(App, ['DocStore'], function (context, props) {
-    return {
-        currentTitle: context.getStore('DocStore').getCurrentTitle() || '',
-        currentDoc: context.getStore('DocStore').getCurrent() || ''
-    };
 });
-
-App = handleHistory(App);
-
-App = provideContext(App);
 
 export default App;
