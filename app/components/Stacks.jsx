@@ -7,32 +7,25 @@
 import React from 'react';
 
 import config from '../configs/config';
-// stores
-import StackStore from '../stores/StackStore';
-
 import FilteredList from './FilteredList';
 
-// mixins
-import {FluxibleMixin} from 'fluxible/addons';
+import { provideContext, connectToStores } from 'fluxible/addons';
+import { handleHistory, NavLink } from 'fluxible-router';
 
-var Stacks = React.createClass({
-    mixins: [FluxibleMixin],
-    statics: {
-        storeListeners: [StackStore]
-    },
+class Stacks extends React.Component {
+    constructor(props) {
+        super(props);
+        this.initial = props.current;
+    }
 
-    getInitialState: function () {
-        this.store = this.getStore(StackStore);
-        this.state = this.store.getState();
-        this.initial = this.state.current;
-        return this.state;
-    },
-
-    onChange: function () {
-        var state = this.store.getState();
-        this.setState(state);
-    },
-
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.isNavigateComplete;
+    }
+    
+    componentDidUpdate(prevProps, prevState) {
+        document.title = this.props.currentTitle;
+    }
+    
     filteredList(event) {
         var search = event.target.value.toLowerCase();
         var current = this.state.current;
@@ -48,9 +41,9 @@ var Stacks = React.createClass({
             current = {key: key, content: updated};
             this.setState({current: current});
         }
-	  },
+	  }
 
-    render: function () {
+    render() {
         var data = this.state.current;
         var items = '';
         if (Object.keys(data).length) {
@@ -73,6 +66,18 @@ var Stacks = React.createClass({
             </div>
         );
     }
+}
+
+Stacks = connectToStores(Stacks, ['StackStore'], function (stores, props) {
+    return {
+        currentTitle: stores.StackStore.getCurrentTitle() || '',
+        currentStack: stores.StackStore.getCurrent() || {}
+    };
 });
+
+Stacks = handleHistory(Stacks);
+
+// and wrap that with context
+Stacks = provideContext(Stacks);
 
 export default Stacks;

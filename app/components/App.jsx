@@ -23,10 +23,6 @@ import Status404 from './Status404';
 import { provideContext, connectToStores } from 'fluxible/addons';
 import { handleHistory, NavLink } from 'fluxible-router';
 
-// stores
-import DocStore from '../stores/DocStore';
-import StackStore from '../stores/StackStore';
-
 const debug = Debug('MyApp');
 class App extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
@@ -47,9 +43,9 @@ class App extends React.Component {
             if (this.props.currentNavigateError) {
                 Handler = <Status500 />;
             } else if (routeName == 'stacks') {
-                Handler = <PageStacks />;
+                Handler = <Handler currentStack={this.props.currentStack} currentRoute={this.props.currentRoute} />;
             } else {
-                Handler = <Handler currentDoc={this.props.currentDoc} />;
+                Handler = <Handler currentDoc={this.props.currentDoc} currentRoute={this.props.currentRoute} />;
             }
         } else {
             Handler = <Status404 />
@@ -80,10 +76,11 @@ class App extends React.Component {
     }
 }
 
-App = connectToStores(App, ['DocStore'], function (stores, props) {
+App = connectToStores(App, ['DocStore', 'StackStore'], function (stores, props) {
     return {
         currentTitle: stores.DocStore.getCurrentTitle() || '',
-        currentDoc: stores.DocStore.getCurrent() || {}
+        currentDoc: stores.DocStore.getCurrent() || {},
+        currentStack: stores.StackStore.getCurrent() || {}
     };
  });
  

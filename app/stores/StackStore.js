@@ -7,7 +7,7 @@ import {BaseStore} from 'fluxible/addons';
 
 class StackStore extends BaseStore {
   constructor(dispatcher) {
-    super(dispatcher);
+    super();
 
     this.stacks = {};
     this.current = {};

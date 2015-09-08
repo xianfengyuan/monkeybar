@@ -9,6 +9,8 @@ import React from 'react';
 // other dependencies
 import Stacks from './Stacks';
 
+import { handleRoute } from 'fluxible-router';
+
 class PageStacks extends React.Component {
     render() {
         return (
@@ -20,5 +22,12 @@ class PageStacks extends React.Component {
         );
     }
 }
+
+PageStacks = handleRoute(PageStacks);
+
+PageStacks.propTypes = {
+    currentStack: React.PropTypes.object.isRequired,
+    currentRoute: React.PropTypes.object.isRequired
+};
 
 export default PageStacks;
