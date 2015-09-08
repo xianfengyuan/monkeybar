@@ -23,7 +23,9 @@ var Stacks = React.createClass({
 
     getInitialState: function () {
         this.store = this.getStore(StackStore);
-        return this.store.getState();
+        this.state = this.store.getState();
+        this.initial = this.state.current;
+        return this.state;
     },
 
     onChange: function () {
@@ -35,7 +37,7 @@ var Stacks = React.createClass({
         var search = event.target.value.toLowerCase();
         var current = this.state.current;
         var key = current.key;
-        var updated = current.content;
+        var updated = this.initial.content;
         if (search) {
             updated = updated.filter(function(item){
                 return JSON.stringify(item).toLowerCase().search(event.target.value.toLowerCase()) !== -1;
@@ -43,6 +45,7 @@ var Stacks = React.createClass({
             current = {key: key, content: updated};
             this.setState({current: current});
         } else {
+            current = {key: key, content: updated};
             this.setState({current: current});
         }
 	  },
@@ -65,7 +68,7 @@ var Stacks = React.createClass({
 
         return (
             <div>
-                <FilteredList stacked={this.state.current.content} onFilteredList={this.filteredList.bind(this)}/>
+                <FilteredList stacked={this.state.current.content} onFilteredList={this.filteredList}/>
                 {items}
             </div>
         );
