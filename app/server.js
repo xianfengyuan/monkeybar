@@ -12,9 +12,7 @@ import bodyParser from 'body-parser';
 import csrf from 'csurf';
 import React from 'react';
 import UAParser from 'ua-parser-js';
-import {navigateAction} from 'flux-router-component';
-import show404 from './actions/show404';
-import show500 from './actions/show500';
+import {navigateAction} from 'fluxible-router';
 
 import docs from './services/docs';
 import stacks from './services/stacks';
@@ -96,23 +94,6 @@ SERVER.use(function (req, res, next) {
     });
 
     context.executeAction(navigateAction, { url: req.url }, function (err) {
-        if (err) {
-            if (err.status === 404 || err.statusCode === 404) {
-                res.status(404);
-                context.executeAction(show404, { err: err }, function () {
-                    renderApp(req, res, context);
-                });
-            }
-            else {
-                res.status(500);
-                context.executeAction(show500, { err: err }, function () {
-                    console.log(err.stack || err);
-                    renderApp(req, res, context);
-                });
-            }
-
-            return;
-        }
         renderApp(req, res, context);
     });
 });

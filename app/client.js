@@ -14,6 +14,7 @@ const dehydratedState = window.App; // sent from the server
 
 // for chrome dev tool support
 window.React = React;
+window.app = app;
 
 app.rehydrate(dehydratedState, (err, context) => {
     if (err) {

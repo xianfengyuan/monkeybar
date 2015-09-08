@@ -5,7 +5,7 @@
 
 // external packages
 import React from 'react';
-import {NavLink} from 'flux-router-component';
+import {NavLink} from 'fluxible-router';
 
 // other dependencies
 import assets from '../utils/assets';

@@ -4,6 +4,5 @@
  */
 
 export default function (context, payload, done) {
-    context.dispatch('STATUS_404', payload);
-    done();
+    done(new Error('Whoops!'));
 }

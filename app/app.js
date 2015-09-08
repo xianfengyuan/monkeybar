@@ -7,7 +7,8 @@
 import React from 'react';
 import FluxibleApp from 'fluxible';
 import fetchrPlugin from 'fluxible-plugin-fetchr';
-import routrPlugin from 'fluxible-plugin-routr';
+import Debug from 'debug';
+import { RouteStore } from 'fluxible-router';
 
 // configs
 import routes from './configs/routes';
@@ -15,33 +16,30 @@ import routes from './configs/routes';
 // components
 import App from './components/App';
 
-// actions
-import show500 from './actions/show500';
-import show404 from './actions/show404';
+const debug = Debug('app.js');
+const MyRouteStore = RouteStore.withStaticRoutes(routes);
 
 const app = new FluxibleApp({
     component: App,
     componentActionHandler: function (context, payload, done) {
         if (payload.err) {
-            if (payload.err.statusCode && payload.err.statusCode === 404) {
-                context.executeAction(show404, payload, done);
-            }
-            else {
-                console.log(payload.err.stack || payload.err);
-                context.executeAction(show500, payload, done);
-            }
-            return;
+          if (payload.err.statusCode === 404) {
+            debug('component 404 error', payload.err);
+          }
+          else {
+            debug('component exception', payload.err);
+          }
+          return;
         }
-        done();
+      done();
     }
 });
 
 app.plug(fetchrPlugin({ xhrPath: '/_api' }));
-app.plug(routrPlugin({ routes: routes }));
 
-app.registerStore(require('./stores/ApplicationStore'));
 app.registerStore(require('./stores/DocStore'));
 app.registerStore(require('./stores/StackStore'));
 app.registerStore(require('./stores/ReferenceStore'));
+app.registerStore(MyRouteStore);
 
 export default app;

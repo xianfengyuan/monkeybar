@@ -6,7 +6,7 @@
 // external packages
 import React from 'react';
 import cx from 'classnames';
-import {NavLink} from 'flux-router-component';
+import {NavLink} from 'fluxible-router';
 
 import config from '../configs/config';
 

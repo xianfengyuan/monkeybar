@@ -2,8 +2,7 @@ import config from '../configs/config';
 import DocStore from '../stores/DocStore';
 
 export default function (context, route, done) {
-    let routeConfig = route.config || {};
-    let githubPath = routeConfig.githubPath;
+  let githubPath = route.get('githubPath');
 
     if (!githubPath) {
         let err404 = new Error('Document not found');
@@ -11,7 +10,7 @@ export default function (context, route, done) {
         return done(err404);
     }
 
-  let pageTitle = routeConfig.pageTitle || (routeConfig.pageTitlePrefix + ' | ' + config.appTitle);
+  let pageTitle = route.get('pageTitle') || (route.get('pageTitlePrefix') + ' | ' + config.appTitle);
 
     // Load from cache
     let docFromCache = context.getStore(DocStore).get(githubPath);
