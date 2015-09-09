@@ -45,23 +45,27 @@ class DocStore extends BaseStore {
     return this.currentTitle;
   }
 
-    dehydrate() {
-        return {
-            docs: this.docs,
-            current: this.current
-        };
-    }
+  getState() {
+    return {
+      docs: this.docs,
+      current: this.current
+    };
+  }
+  
+  dehydrate() {
+    return this.getState();
+  }
 
-    rehydrate(state) {
-        this.docs = state.docs;
-        this.current = state.current;
-    }
+  rehydrate(state) {
+    this.docs = state.docs;
+    this.current = state.current;
+  }
 }
 
 DocStore.storeName = 'DocStore';
 DocStore.handlers = {
   'UPDATE_PAGE_TITLE': '_receiveTitle',
-    'RECEIVE_DOC_SUCCESS': '_receiveDoc'
+  'RECEIVE_DOC_SUCCESS': '_receiveDoc'
 };
 
 export default DocStore;
