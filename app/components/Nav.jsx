@@ -18,8 +18,8 @@ class Nav extends React.Component {
         let selected = this.props.selected;
 
         return (
-            <ul role="navigation" className="Va(m) M(0) P(0)">
-                <li className={cx({'selected': selected !== 'stacks' && selected !== 'home', 'D(ib) Va(m) Pos(r)': true})}>
+            <ul role="navigation" className="Va(m)">
+                <li className={cx({'selected': selected !== 'stacks' && selected !== 'home', 'D(ib) Va(m) Mstart(10px) Pos(r)': true})}>
                     <NavLink routeName="quickStart" className="D(b) C(#fff) Td(n):h">Docs</NavLink>
                 </li>
                 <li className={cx({'selected': selected === 'stacks', 'D(ib) Va(m) Pos(r) Mstart(10px)': true})}>
