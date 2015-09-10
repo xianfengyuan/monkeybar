@@ -5,79 +5,70 @@
 
 // external packages
 import React from 'react';
+import cx from 'classnames';
 
 import config from '../configs/config';
 import FilteredList from './FilteredList';
 
-import { provideContext, connectToStores } from 'fluxible/addons';
-import { handleHistory, NavLink } from 'fluxible-router';
+class OpsStack extends React.Component {
+    render() {
+        var stack = this.props.stack;
+        return (
+            <li className="OpsStack">
+                <span className="stackname">{stack.Name}</span>
+            </li>
+        )
+    }
+}
+
+class OpsStacks extends React.Component {
+    render() {
+        var content = this.props.stacks.map(function(e) {
+            return (
+                <OpsStack stack={e} />
+            )
+        });
+        
+        return (
+            <ul className="OpsStack">{content}</ul>
+        )
+    }
+}
 
 class Stacks extends React.Component {
     constructor(props) {
         super(props);
-        this.initial = props.current;
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.isNavigateComplete;
-    }
-    
-    componentDidUpdate(prevProps, prevState) {
-        document.title = this.props.currentTitle;
+        this.state = {
+            initial: props.stacks.content,
+            stacks: props.stacks.content
+        };
     }
     
     filteredList(event) {
         var search = event.target.value.toLowerCase();
-        var current = this.state.current;
-        var key = current.key;
-        var updated = this.initial.content;
+        var updated = this.state.initial;
         if (search) {
             updated = updated.filter(function(item){
                 return JSON.stringify(item).toLowerCase().search(event.target.value.toLowerCase()) !== -1;
 		        });
-            current = {key: key, content: updated};
-            this.setState({current: current});
+            this.setState({stacks: updated});
         } else {
-            current = {key: key, content: updated};
-            this.setState({current: current});
+            this.setState({stacks: this.state.initial});
         }
 	  }
 
     render() {
-        var data = this.state.current;
-        var items = '';
-        if (Object.keys(data).length) {
-            var stacks = data.content;
-            items = stacks.map(function (stack) {
-                var displayclassDefinitions = "Bgc(#0280ae.5) C(#fff) P(20px)";
-                return (
-                    <div key={'id-' + stack.Name}>
-                        {stack.Name}
-                    </div>
-                );
-                
-            }, this);
-        }
-
+        let wrapperClasses = cx({
+            'docs-page innerwrapper D(tb)--sm Tbl(f) Pt(20px) Mb(50px) Maw(1000px)--sm Miw(1000px)--lg Mx(a)--sm W(96%)--sm': true
+        });
+        
         return (
-            <div>
-                <FilteredList stacked={this.state.current.content} onFilteredList={this.filteredList}/>
-                {items}
+            <div className={wrapperClasses}>
+                <FilteredList stacked={this.state.stacks} onFilteredList={this.filteredList.bind(this)}/>
+                <OpsStacks stacks={this.state.stacks} />
             </div>
         );
     }
 }
-
-Stacks = connectToStores(Stacks, ['StackStore'], function (stores, props) {
-    return {
-        currentTitle: stores.StackStore.getCurrentTitle() || '',
-        currentStack: stores.StackStore.getCurrent() || {}
-    };
-});
-
-Stacks = handleHistory(Stacks);
-
-// and wrap that with context
-Stacks = provideContext(Stacks);
 
 export default Stacks;
