@@ -30,7 +30,7 @@ export default {
         method: 'GET',
         handler: PageStacks,
         action: showStacks,
-        pageTitlePrefix: 'Stacks',
+        pageTitlePrefix: 'OpsWorks Stacks',
       page: 'stacks',
       service: 'opsworks'
     },

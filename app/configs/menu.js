@@ -18,11 +18,11 @@ export default [
         ]
     },
     {
-        category: 'TUTORIALS',
+        category: 'AWS RESOURCES',
         children: [
             {
-                label: 'Grid system',
-                routeName: 'grid'
+                label: 'OpsWorks Stacks',
+                routeName: 'stacks'
             }
         ]
     }
