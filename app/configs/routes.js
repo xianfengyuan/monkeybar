@@ -64,6 +64,15 @@ export default {
         pageTitlePrefix: 'Tutorials: Shorthand',
         page: 'docs'
     },
+    atomizer: {
+        path: '/guides/atomizer.html',
+        method: 'GET',
+        handler: PageDocs,
+        githubPath: '/docs/guides/atomizer.md',
+        action: showDoc,
+        pageTitlePrefix: 'Guides: Atomizer Tool',
+        page: 'docs'
+    },
 
     // reference
     reference: {

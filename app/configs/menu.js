@@ -14,6 +14,10 @@ export default [
             {
                 label: 'Helper classes',
                 routeName: 'helperClasses'
+            },
+            {
+                label: 'Guides: Atomizer Tool',
+                routeName: 'atomizer'
             }
         ]
     },
