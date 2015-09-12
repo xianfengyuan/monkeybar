@@ -164,7 +164,8 @@ module.exports = function(grunt) {
                 },
                 files: [{
                     src: [
-                        '<%= project.app %>/assets/css/base.css',
+                      '<%= project.app %>/assets/css/base.css',
+                      '<%= project.app %>/assets/css/modal.css',
                         '<%= project.build %>/css/atomic.css',
                         '<%= project.app %>/assets/css/helpers.css',
                         '<%= project.app %>/assets/css/custom.css',
@@ -185,7 +186,8 @@ module.exports = function(grunt) {
                 },
                 files: [{
                     src: [
-                        '<%= project.app %>/assets/css/base.css',
+                      '<%= project.app %>/assets/css/base.css',
+                      '<%= project.app %>/assets/css/modal.css',
                         '<%= project.build %>/css/atomic.css',
                         '<%= project.app %>/assets/css/helpers.css',
                         '<%= project.app %>/assets/css/custom.css',

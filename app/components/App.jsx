@@ -15,7 +15,6 @@ import assets from '../utils/assets';
 import Nav from './Nav';
 import PageHome from './PageHome';
 import PageDocs from './PageDocs';
-import PageReference from './PageReference';
 import PageStacks from './PageStacks';
 import Status500 from './Status500';
 import Status404 from './Status404';

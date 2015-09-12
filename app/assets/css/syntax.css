@@ -1,7 +1,7 @@
 pre,
 code {
     font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-    max-width: 738px; /* this is inside a table-cell */
+    max-width: 1400px; /* this is inside a table-cell */
 }
 pre {
     padding: 30px 16px 10px 7px;

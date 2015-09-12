@@ -9,13 +9,14 @@ import cx from 'classnames';
 
 import config from '../configs/config';
 import FilteredList from './FilteredList';
+import JSONModal from './JSONModal';
 
 class OpsStack extends React.Component {
     render() {
         var stack = this.props.stack;
         return (
             <li className="OpsStack">
-                <span className="stackname">{stack.Name}</span>
+                <JSONModal data={stack} title={stack.Name}>{stack.Name}</JSONModal>
             </li>
         )
     }

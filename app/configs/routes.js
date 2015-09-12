@@ -6,12 +6,10 @@
 import config from '../configs/config';
 
 import showDoc from '../actions/showDoc';
-import showPage from '../actions/showPage';
 import showStacks from '../actions/showStacks';
 
 import PageHome from '../components/PageHome';
 import PageDocs from '../components/PageDocs';
-import PageReference from '../components/PageReference';
 import PageStacks from '../components/PageStacks';
 
 export default {
@@ -72,15 +70,5 @@ export default {
         action: showDoc,
         pageTitlePrefix: 'Guides: Atomizer Tool',
         page: 'docs'
-    },
-
-    // reference
-    reference: {
-        path: '/reference',
-        method: 'GET',
-        handler: PageReference,
-        action: showPage,
-        pageTitlePrefix: 'Reference',
-        page: 'reference'
     }
 };
