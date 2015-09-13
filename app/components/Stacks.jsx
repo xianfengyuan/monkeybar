@@ -16,7 +16,7 @@ class OpsStack extends React.Component {
         var stack = this.props.stack;
         return (
             <li className="OpsStack">
-                <JSONModal data={stack} title={stack.Name}>{stack.Name}</JSONModal>
+                <JSONModal data={stack} title={stack.Name}/>
             </li>
         )
     }

@@ -22,7 +22,7 @@ export default class JSONModal extends React.Component {
     render() {
         return (
             <ButtonToolbar>
-                <Button bsStyle="primary" onClick={this.showModal.bind(this)}>{this.props.title}</Button>
+                <Button bsStyle="link" onClick={this.showModal.bind(this)}><a href="#">{this.props.title}</a></Button>
                 <Modal {...this.props} show={this.state.show} onHide={this.hideModal.bind(this)}>
                     <Modal.Header closeButton>
                         <Modal.Title id='contained-modal-title-lg'>JSON Details</Modal.Title>
