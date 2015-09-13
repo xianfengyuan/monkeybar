@@ -16,6 +16,7 @@ import {navigateAction} from 'fluxible-router';
 
 import docs from './services/docs';
 import stacks from './services/stacks';
+import controllers from './controllers';
 
 // components
 import Html from './components/Html';
@@ -83,6 +84,8 @@ function renderApp(req, res, context) {
     }));
     res.send(DOC_TYPE + html);
 }
+
+SERVER.use(controllers);
 
 // Every other request gets the app bootstrap
 SERVER.use(function (req, res, next) {

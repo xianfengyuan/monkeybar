@@ -2,7 +2,7 @@
  * Copyright 2015, Xianfeng Yuan.
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
-import debugLib from 'debug';
+import Debug from 'debug';
 import marked from 'marked';
 import fs from 'fs';
 import highlight from 'highlight.js';
@@ -11,7 +11,7 @@ import renderer from './../utils/renderer';
 import config from '../configs/config';
 import routes from '../configs/routes';
 
-const debug = debugLib('StackService');
+const debug = Debug('StackService');
 
 marked.setOptions({
   highlight: (code) => {
