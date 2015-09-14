@@ -15,22 +15,23 @@ import PageStacks from '../components/PageStacks';
 export default {
     // home
     home: {
-        path: '/',
-        method: 'GET',
-        handler: PageHome,
-        githubPath: '/docs/home.md',
-        action: showDoc,
+      path: '/',
+      method: 'GET',
+      handler: PageHome,
+      githubPath: '/docs/home.md',
+      action: showDoc,
       pageTitle: config.appTitle,
-        page: 'home'
+      page: 'home'
     },
     stacks: {
-        path: '/stacks',
-        method: 'GET',
-        handler: PageStacks,
-        action: showStacks,
-        pageTitlePrefix: 'OpsWorks Stacks',
+      path: '/stacks',
+      method: 'GET',
+      handler: PageStacks,
+      action: showStacks,
+      pageTitlePrefix: 'OpsWorks Stacks',
       page: 'stacks',
-      service: 'opsworks'
+      service: 'opsworks',
+      detail: 'deployments'
     },
 
     // docs - root

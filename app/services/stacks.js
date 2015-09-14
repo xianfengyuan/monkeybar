@@ -7,7 +7,8 @@ import marked from 'marked';
 import fs from 'fs';
 import highlight from 'highlight.js';
 
-import renderer from './../utils/renderer';
+import renderer from '../utils/renderer';
+import helpers from '../utils/helpers';
 import config from '../configs/config';
 import routes from '../configs/routes';
 
@@ -24,54 +25,87 @@ let cache = {};
 
 let fetchAPI = function (params, cb) {
   let service = params.service;
+  let detail = params.detail;
   debug(service);
   let apiPath = config.gdir(service);
+  let deploys = config.gdir(detail);
 
   fs.readFile(apiPath, function(err, data) {
     if (err) {
       return cb && cb(err);
     }
+    let scache = JSON.parse(data).cache;
 
-    let fcache = JSON.parse(data);
-    
-    let alist = ['gindevpower', 'ginprodpower'];
-    let items = [];
-    alist.forEach(function(e) {
-      if (fcache && fcache.cache && fcache.cache[e]) {
-        let stacks = fcache.cache[e];
-        if (stacks.length) {
-          items = items.concat(stacks);
-        }
+    fs.readFile(deploys, function(err, data) {
+      if (err) {
+        return cb && cb(err);
       }
-    });
+      let dcache = JSON.parse(data).cache;
+      let alist = ['ginprodpower', 'gindevpower'];
 
-    debug(items.length);
+      let stacks = [{a: alist[0], d: {Stacks: scache[alist[0]]}},
+                    {a: alist[1], d: {Stacks: scache[alist[1]]}}];
+      stacks = stacks.map(function(e) {
+        let account = e.a, slist = e.d.Stacks;
+        slist = slist.map(function(d) {
+          let nstack = d;
+          nstack.deployments = [];
+          let ts = 'deployments';
+          let deployments = dcache[account].filter(function(dd) {
+            return dd.sid === d.StackId;
+          });
+          if (deployments.length) {
+            nstack.deployments = deployments[0].si;
+            if (nstack.deployments.length) {
+              ts = new Date(nstack.deployments[0].CreatedAt);
+              let date = helpers.datestamp(ts.getTime() / 1000);
+              ts = helpers.formatZero(ts.getHours()) + ':' +
+                helpers.formatZero(ts.getMinutes()) + ':' +
+                helpers.formatZero(ts.getSeconds()) + ' ' + date;
+            }
+            nstack.lastdeploy = ts;
+            debug(ts);
+          }
+          return nstack;
+        });
+        return {a: account, d: {Stacks: slist}};
+      });
+
+      let items = [];
+      stacks.forEach(function(e) {
+        let slist = e.d.Stacks;
+        if (slist.length) {
+          items = items.concat(slist);
+        }
+      });
+      debug(items.length);
     
-    if (items.length) {
-      cache[service] = {
-        key: service,
-        content: items
-      };
-            
-      cb && cb(null, cache[service]);
-    } else {
-      cache[service] = {
-        key: service,
-        content: marked('# Service Not Found: ' + service, {renderer: renderer})
-      };
-
-      cb && cb(null, cache[service]);
-    }
-  });
+      if (items.length) {
+        cache[service] = {
+          key: service,
+          content: items
+        };
+        cb && cb(null, cache[service]);
+      } else {
+        cache[service] = {
+          key: service,
+          content: marked('# Service Not Found: ' + service, {renderer: renderer})
+        };
+        cb && cb(null, cache[service]);
+      }
+    }); //deploys
+  }); // stacks
 };
 
 (function refreshService() {
   Object.keys(routes).forEach(function (routeName) {
-    var service = routes[routeName].service;
+    let service = routes[routeName].service;
+    let detail = routes[routeName].detail;
     if (service) {
       debug('refreshing ' + service);
       fetchAPI({
-        service: service
+        service: service,
+        detail: detail
       });
     }
   });
