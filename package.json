@@ -23,6 +23,7 @@
     "escape-string-regexp": "^1.0.0",
     "express": "^4.10.4",
     "express-state": "^1.2.0",
+    "fixed-data-table": "^0.4.6",
     "flux-router-component": "^0.6.0",
     "fluxible": "^0.4.6",
     "fluxible-plugin-fetchr": "^0.3.0",

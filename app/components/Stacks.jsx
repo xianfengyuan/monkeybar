@@ -10,6 +10,7 @@ import cx from 'classnames';
 import config from '../configs/config';
 import FilteredList from './FilteredList';
 import JSONModal from './JSONModal';
+import StackTable from './StackTable';
 
 class OpsStack extends React.Component {
     render() {
@@ -66,7 +67,7 @@ class Stacks extends React.Component {
         return (
             <div className={wrapperClasses}>
                 <FilteredList stacked={this.state.stacks} onFilteredList={this.filteredList.bind(this)}/>
-                <OpsStacks stacks={this.state.stacks} />
+                <StackTable stacks={this.state.stacks} />
             </div>
         );
     }
