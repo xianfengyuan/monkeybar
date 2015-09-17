@@ -5,21 +5,24 @@ let Table = FixedDataTable.Table;
 let Column = FixedDataTable.Column;
 
 export default class StackTable extends React.Component {
-    rowGetter(rowIndex) {
-        return rows[rowIndex];
-    }
-
     render() {
-        let coldef = {Region: 500, Name: 1500, VpcId: 500, StackId: 1500};
+        let coldef = {Region: 125, Name: 375, VpcId: 125, StackId: 375};
         let width = 0;
+        Object.keys(coldef).forEach(function(k) {
+            width = width + coldef[k];
+        });
         let rows = this.props.stacks.map(function(e) {
             let row = [];
             Object.keys(coldef).forEach(function(k) {
                 row.push(e[k]);
-                width = width + coldef[k];
             });
             return row;
         });
+
+        function rowGetter(rowIndex) {
+            return rows[rowIndex];
+        }
+
         let i = 0;
         let cols = [];
         Object.keys(coldef).forEach(function(k) {
@@ -29,8 +32,8 @@ export default class StackTable extends React.Component {
             i = i + 1;
         });
         return (
-            <Table rowHeight={50} rowGetter={this.rowGetter} rowsCount={rows.length}
-                   width={width} height={5000} headerHeight={50}>
+            <Table rowHeight={40} rowGetter={rowGetter} rowsCount={rows.length}
+                   width={width} height={600} headerHeight={40}>
                 {cols}
             </Table>
         )
