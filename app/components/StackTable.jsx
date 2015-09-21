@@ -8,29 +8,32 @@ let Column = FixedDataTable.Column;
 
 let SortTypes = {
     ASC: 'ASC',
-    DES: 'DESC'
+    DES: 'DES'
 };
 
 let ColumnDef = {Region: 125, Name: 375, VpcId: 125, StackId: 375};
 let Width = 0;
-Object.keys(ColumnDef).forEach(function(k) {
+let Keys = Object.keys(ColumnDef);
+Keys.forEach(function(k) {
     Width = Width + ColumnDef[k];
 });
-let i = 0;
-let Columns = [];
-Object.keys(ColumnDef).forEach(function(k) {
-    Columns.push(
-        <Column label={k} width={ColumnDef[k]} dataKey={i} />
-    );
-    i = i + 1;
-});
+
+function getIndex(list, key) {
+    let i = 0;
+    for (; i < list.length; i++) {
+        if (list[i].indexOf(key) >= 0) {
+            break;
+        }
+    }
+    return i == list.length ? -1 : i;
+}
 
 export default class StackTable extends React.Component {
     constructor(props) {
         super(props);
         let rows = props.stacks.map(function(e) {
             let row = [];
-            Object.keys(ColumnDef).forEach(function(k) {
+            Keys.forEach(function(k) {
                 row.push(e[k]);
             });
             return row;
@@ -64,11 +67,64 @@ export default class StackTable extends React.Component {
         return this.state.filteredRows[rowIndex];
     }
 
+    _sortRowsBy(cellDataKey) {
+        let sortDir = this.state.sortDir;
+        let sortBy = cellDataKey;
+        if (sortBy === this.state.sortBy) {
+            sortDir = this.state.sortDir === SortTypes.ASC ? SortTypes.DES : SortTypes.ASC;
+        } else {
+            sortDir = SortTypes.DES;
+        }
+        let sortInd = getIndex(Keys, sortBy);
+        let filteredRows = this.state.filteredRows.slice();
+        filteredRows.sort((a, b) => {
+            let sortVal = 0;
+            if (a[sortInd] > b[sortInd]) {
+                sortVal = 1;
+            }
+            if (a[sortInd] < b[sortInd]) {
+                sortVal = -1;
+            }
+      
+            if (sortDir === SortTypes.DES) {
+                sortVal = sortVal * -1;
+            }
+      
+            return sortVal;
+        });
+    
+        this.setState({
+            filteredRows,
+            sortBy,
+            sortDir,
+        });
+    }
+    
+    _renderHeader(label, cellDataKey) {
+        return (
+            <a onClick={this._sortRowsBy.bind(this, cellDataKey)}>{label}</a>
+        );
+    }
+    
     _onFilterChange(e) {
         this._filterRowsBy(e.target.value);
     }
 
     render() {
+        let sortDirArrow = '';
+        let sortBy = this.state.sortBy;
+        if (this.state.sortDir !== null){
+            sortDirArrow = this.state.sortDir === SortTypes.DES ? ' ↓' : ' ↑';
+        }
+        let Columns = [], i = 0;
+        for (; i < Keys.length; i++) {
+            let k = Keys[i];
+            let label = k + (sortBy === k ? sortDirArrow : '');
+            Columns.push(
+                <Column headerRenderer={this._renderHeader.bind(this, label, k)} label={label} width={ColumnDef[k]} dataKey={i} />
+            );
+        }
+        
         return (
             <div>
                 <FilteredList stacked={this.state.filteredRows} onFilteredList={this._onFilterChange.bind(this)}/>
