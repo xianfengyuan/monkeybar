@@ -14,6 +14,7 @@
   ],
   "dependencies": {
     "atomizer": "^3.1.0",
+    "aws-sdk": "^2.2.5",
     "babel": "^4.7.8",
     "body-parser": "^1.9.3",
     "classnames": "^1.2.0",

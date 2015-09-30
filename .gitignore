@@ -41,3 +41,6 @@ grasshopper.json
 .DS_Store
 .jshintignore
 .validate.json
+
+# custom config files
+secrets.js

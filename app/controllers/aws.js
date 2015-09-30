@@ -3,7 +3,8 @@ import aws from '../services/aws';
 
 let router = express.Router();
 let routes = {
-  stack: aws.opsworks
+  stack: aws.opsworks,
+  addr: aws.getAddrByID
 };
 
 router.get('/:route/:id', function(req, res) {

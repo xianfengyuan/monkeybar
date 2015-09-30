@@ -1,11 +1,90 @@
 import Debug from 'debug';
 import fs from 'fs';
+import aws from 'aws-sdk';
 
 import config from '../configs/config';
+import awscreds from '../configs/secrets';
 
 const debug = Debug('awsService');
 
+String.prototype.inList = function (list) {
+   return (list.indexOf(this.toString()) !== -1);
+};
+
+function getAWS(account, region, service) {
+  let creds = awscreds[account];
+  aws.config = new aws.Config(creds);
+  aws.config.region = (service === 'OpsWorks')? 'us-east-1': region;
+  let ops = new aws[service]({maxRetries: 10});
+  return ops;
+}
+
+function getOps(account) {
+  return getAWS(account, 'us-east-1', 'OpsWorks');
+}
+
+function getOpsItem(ops, func, param, collection, attr, val, done) {
+  if (ops[func] === undefined) {
+    return done({message: 'no function defined: ' + func});
+  }
+  ops[func](param, function(err, data) {
+    if (err) {
+      return done(err);
+    }
+    
+    let result = null;
+    for (let i = 0; i < data[collection].length; i++) {
+      let item = data[collection][i];
+      if (item[attr] && (item[attr].toLowerCase() === val.toLowerCase())) {
+        result = item;
+      }
+    }
+    done(null, result);
+  });
+}
+
+function getOpsItems(ops, func, param, collection, attr, vals, done) {
+  let vl = vals.map(function(val) {
+    return val.toLowerCase();
+  });
+  if (ops[func] === undefined) {
+    return done({message: 'no function defined: ' + func});
+  }
+  ops[func](param, function(err, data) {
+    if (err) {
+      return done(err);
+    }
+    
+    let results = [];
+    for (let i = 0; i < data[collection].length; i++) {
+      let item = data[collection][i];
+      if (item[attr].toLowerCase().inList(vl)) {
+        results.push(item);
+      }
+    }
+    done(null, results);
+  });
+}
+
+function getOpsObject(ops, func, param, done) {
+  if (ops[func] === undefined) {
+    return done({message: 'no function defined: ' + func});
+  }
+  ops[func](param, function(err, data){
+    if (err) {
+      return done(err);
+    }
+    done(null, data);
+  });
+}
+
 export default {
+  getAWS: getAWS,
+  getOps: getOps,
+  getOpsObject: getOpsObject,
+  getOpsItems: getOpsItems,
+  getOpsItem: getOpsItem,
+  
   opsworks: function(acc, detail, done) {
     let accounts = acc.split(',');
     debug(acc);
@@ -40,5 +119,23 @@ export default {
         done(null, {account: acc, stacks: stacks});
       });
     });
+  },
+
+  getAddrByID: function(account, stackId, done) {
+    let ops = getOps(account);
+    getOpsObject(ops, 'describeInstances', {'StackId': stackId}, function(err, data) {
+      if (err) {
+        return done(err);
+      }
+      
+      if (!data.Instances.length) {
+        return done({message: 'no instance found in stack: ' + stackId});
+      }
+      let ilist = data.Instances.sort(function(sa, sb) {
+        return (sa.Hostname < sb.Hostname) ? -1 : 1;
+      });
+      done(null, ilist);
+    });
   }
+
 };
