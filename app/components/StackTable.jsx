@@ -2,6 +2,7 @@ import React from 'react';
 import FixedDataTable from 'fixed-data-table';
 
 import FilteredList from './FilteredList';
+import JSONData from './JSONData';
 
 let Table = FixedDataTable.Table;
 let Column = FixedDataTable.Column;
@@ -12,6 +13,7 @@ let SortTypes = {
 };
 
 let ColumnDef = {Region: 125, Name: 375, VpcId: 125, StackId: 375};
+//let ColumnDef = {StackId: 375};
 let Width = 0;
 let Keys = Object.keys(ColumnDef);
 Keys.forEach(function(k) {
@@ -105,6 +107,10 @@ export default class StackTable extends React.Component {
             <a onClick={this._sortRowsBy.bind(this, cellDataKey)}>{label}</a>
         );
     }
+
+    _renderLink(cellData) {
+        return <JSONData data={cellData} account="ginprod" title={cellData}/>
+    }
     
     _onFilterChange(e) {
         this._filterRowsBy(e.target.value);
@@ -113,7 +119,7 @@ export default class StackTable extends React.Component {
     render() {
         let sortDirArrow = '';
         let sortBy = this.state.sortBy;
-        if (this.state.sortDir !== null){
+        if (this.state.sortDir !== null) {
             sortDirArrow = this.state.sortDir === SortTypes.DES ? ' ↓' : ' ↑';
         }
         let Columns = [], i = 0;
@@ -121,7 +127,7 @@ export default class StackTable extends React.Component {
             let k = Keys[i];
             let label = k + (sortBy === k ? sortDirArrow : '');
             Columns.push(
-                <Column headerRenderer={this._renderHeader.bind(this, label, k)} label={label} width={ColumnDef[k]} dataKey={i} />
+                <Column headerRenderer={this._renderHeader.bind(this, label, k)} label={label} width={ColumnDef[k]} dataKey={i} cellRenderer={this._renderLink.bind(this)} />
             );
         }
         

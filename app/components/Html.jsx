@@ -32,6 +32,7 @@ class Html extends React.Component {
                     <link rel="stylesheet" href={assets['css/bundle.css']} />
                     <link href="http://fonts.googleapis.com/css?family=Nobile" rel="stylesheet" />
                     <link rel="author" href="humans.txt" />
+                    <script src="https://code.jquery.com/jquery-1.10.0.min.js"></script>
                     {ieStylesheet}
                 </head>
                 <body>
