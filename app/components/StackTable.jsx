@@ -12,8 +12,8 @@ let SortTypes = {
     DES: 'DES'
 };
 
-let ColumnDef = {Region: 125, Name: 375, VpcId: 125, StackId: 375};
-//let ColumnDef = {StackId: 375};
+//let ColumnDef = {Region: 125, Name: 375, VpcId: 125, StackId: 375};
+let ColumnDef = {StackId: 375};
 let Width = 0;
 let Keys = Object.keys(ColumnDef);
 Keys.forEach(function(k) {
@@ -30,6 +30,17 @@ function getIndex(list, key) {
     return i == list.length ? -1 : i;
 }
 
+function getStack(list, stackId) {
+    let stacks = list.filter(function(e) {
+        return e.StackId == stackId;
+    }).map(function(e) {
+        let ne = e;
+        ne['account'] = e.DefaultSshKeyName.replace('-master', '');
+        return ne;
+    });
+    return stacks[0];
+}
+
 export default class StackTable extends React.Component {
     constructor(props) {
         super(props);
@@ -41,6 +52,7 @@ export default class StackTable extends React.Component {
             return row;
         });
         this.state = {
+            stacks: props.stacks,
             rows: rows,
             filteredRows: null,
             filterBy: null,
@@ -109,7 +121,8 @@ export default class StackTable extends React.Component {
     }
 
     _renderLink(cellData) {
-        return <JSONData data={cellData} account="ginprod" title={cellData}/>
+        let s = getStack(this.state.stacks, cellData);
+        return <JSONData data={cellData} account={s.account} title={cellData}/>
     }
     
     _onFilterChange(e) {

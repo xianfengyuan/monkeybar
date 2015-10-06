@@ -13,17 +13,16 @@ export default class JSONData extends React.Component {
     }
 
     showModal() {
-        this.setState({show: true});
+        $.get('/j/addr/' + this.props.data + '?a=' + this.props.account, function(result) {
+            this.setState({
+                content: result,
+                show: true
+            });
+        }.bind(this));
     }
 
     hideModal() {
         this.setState({show: false});
-    }
-    
-    componentDidMount() {
-        $.get('/j/addr/' + this.props.data + '?a=' + this.props.account, function(result) {
-            this.setState({content: result});
-        }.bind(this));
     }
 
     render() {
@@ -35,7 +34,7 @@ export default class JSONData extends React.Component {
                         <Modal.Title id='contained-modal-title-lg'>Data Details</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <pre>{JSON.stringify(this.content, null, 2)}</pre>
+                        <pre>{JSON.stringify(this.state.content, null, 2)}</pre>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.hideModal.bind(this)}>Close</Button>
