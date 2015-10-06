@@ -9,7 +9,8 @@ import cx from 'classnames';
 
 import config from '../configs/config';
 import JSONModal from './JSONModal';
-import StackTable from './StackTable';
+//import StackTable from './StackTable';
+import DataTable from './DataTable';
 
 class OpsStack extends React.Component {
     render() {
@@ -48,10 +49,10 @@ class Stacks extends React.Component {
         let wrapperClasses = cx({
             'docs-page innerwrapper D(tb)--sm Tbl(f) Pt(20px) Mb(50px) Maw(1000px)--sm Miw(1000px)--lg Mx(a)--sm W(96%)--sm': true
         });
-        
+        let cols = {StackId: 375};
         return (
             <div className={wrapperClasses}>
-                <StackTable stacks={this.state.stacks} />
+                <DataTable tableRows={this.state.stacks} cols={cols} />
             </div>
         );
     }
