@@ -29,13 +29,13 @@ export default class StackTable extends React.Component {
         let stackId = columnData[3];
         let s = getStack(this.state.tableRows, stackId);
         if (cellDataKey == 1) {
-            return (
-                <JSONModal data={s} title={s.Name} />
-            )
-        } else if (cellDataKey == 3) {
             let cols = {Hostname: 360, Ec2InstanceId: 150, InstanceType: 150, AvailabilityZone: 150, PublicIp: 125, PrivateIp: 125, Status: 100, };
             return (
-                <JSONData cols={cols} data={cellData} account={s.account} title={cellData} />
+                <JSONData cols={cols} data={stackId} account={s.account} title={s.Name} />
+            )
+        } else if (cellDataKey == 3) {
+            return (
+                <JSONModal data={s} title={stackId} />
             )
         } else {
             return (
