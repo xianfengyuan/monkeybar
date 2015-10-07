@@ -2,6 +2,7 @@ import React from 'react';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import Button from 'react-bootstrap/lib/Button';
 import Modal from 'react-bootstrap/lib/Modal';
+import util from 'util';
 
 import SimpleTable from './SimpleTable';
 
@@ -10,16 +11,30 @@ export default class JSONData extends React.Component {
         super(props);
         this.state = {
             show: false,
+            cols: props.cols,
             content: {}
         }
     }
 
     showModal() {
         $.get('/j/addr/' + this.props.data + '?a=' + this.props.account, function(result) {
-            this.setState({
-                content: result,
-                show: true
-            });
+            let key = Object.keys(this.state.cols)[0];
+            if (util.isArray(result) && Object.keys(result[0]).indexOf(key)) {
+                this.setState({
+                    content: result,
+                    show: true
+                });
+            } else {
+                this.setState({
+                    content: [{
+                        message: 'error loading addresses',
+                        account: this.props.account,
+                        data: this.props.data
+                    }],
+                    cols: {message: 200, data: 400, account: 200},
+                    show: true
+                });
+            }
         }.bind(this));
     }
 
@@ -28,7 +43,6 @@ export default class JSONData extends React.Component {
     }
 
     render() {
-        let cols = {Hostname: 200, Ec2InstanceId: 120, InstanceType: 120, AvailabilityZone: 140, PrivateIp: 100, Status: 80, };
         return (
             <ButtonToolbar>
                 <Button bsStyle="link" onClick={this.showModal.bind(this)}><a href="#">{this.props.title}</a></Button>
@@ -37,7 +51,7 @@ export default class JSONData extends React.Component {
                         <Modal.Title id='contained-modal-title-lg'>Data Details</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <SimpleTable tableRows={this.state.content} cols={cols} />
+                        <SimpleTable tableRows={this.state.content} cols={this.state.cols} />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.hideModal.bind(this)}>Close</Button>
