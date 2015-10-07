@@ -24,9 +24,10 @@ export default class StackTable extends React.Component {
         };
     }
 
-    _renderLink(cellData) {
-        if (cellData.match(/^[a-f0-9]+-[a-f0-9]+-[a-f0-9]+-[a-f0-9]+-[a-f0-9]+$/)) {
-            let s = getStack(this.state.tableRows, cellData);
+    _renderLink(cellData, cellDataKey, columnData, rowData) {
+        let stackId = columnData[3];
+        let s = getStack(this.state.tableRows, stackId);
+        if (cellDataKey == 3) {
             let cols = {Hostname: 360, Ec2InstanceId: 150, InstanceType: 150, AvailabilityZone: 150, PublicIp: 125, PrivateIp: 125, Status: 100, };
             return (
                 <JSONData cols={cols} data={cellData} account={s.account} title={cellData} />
