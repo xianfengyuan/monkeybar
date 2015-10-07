@@ -131,10 +131,29 @@ export default {
       if (!data.Instances.length) {
         return done({message: 'no instance found in stack: ' + stackId});
       }
-      let ilist = data.Instances.sort(function(sa, sb) {
+      let list = data.Instances.sort(function(sa, sb) {
         return (sa.Hostname < sb.Hostname) ? -1 : 1;
       });
-      done(null, ilist);
+      done(null, list);
+    });
+  },
+
+  getDeploy: function(account, stackId, done) {
+    let ops = getOps(account);
+    getOpsObject(ops, 'describeDeployments', {'StackId': stackId}, function(err, data) {
+      if (err) {
+        return done(err);
+      }
+      
+      if (!data.Deployments.length) {
+        return done({message: 'no deployment found in stack: ' + stackId});
+      }
+      let list = data.Deployments.map(function(e) {
+        let obj = e;
+        obj.account = account;
+        return obj;
+      });
+      done(null, list);
     });
   }
 

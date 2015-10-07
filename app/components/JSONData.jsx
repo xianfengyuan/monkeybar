@@ -12,12 +12,13 @@ export default class JSONData extends React.Component {
         this.state = {
             show: false,
             cols: props.cols,
+            api: props.api ? props.api : 'addr',
             content: {}
         }
     }
 
     showModal() {
-        $.get('/j/addr/' + this.props.data + '?a=' + this.props.account, function(result) {
+        $.get('/j/' + this.state.api + '/' + this.props.data + '?a=' + this.props.account, function(result) {
             let key = Object.keys(this.state.cols)[0];
             if (util.isArray(result) && Object.keys(result[0]).indexOf(key)) {
                 this.setState({

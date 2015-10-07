@@ -4,6 +4,7 @@ import aws from '../services/aws';
 let router = express.Router();
 let routes = {
   stack: aws.opsworks,
+  deploy: aws.getDeploy,
   addr: aws.getAddrByID
 };
 

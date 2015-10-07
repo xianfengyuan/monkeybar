@@ -37,6 +37,12 @@ export default class StackTable extends React.Component {
             return (
                 <JSONModal data={s} title={stackId} />
             )
+        } else if (cellDataKey == 4) {
+            let cols = {DeploymentId: 320, Status: 100, IamUserArn: 100, CreatedAt: 320, Command: 125, Duration: 80};
+            let api = 'deploy';
+            return (
+                <JSONData cols={cols} data={stackId} account={s.account} title={s.Name} api={api}/>
+            )
         } else {
             return (
                 {cellData}
