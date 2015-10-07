@@ -1,5 +1,6 @@
 import React from 'react';
 
+import JSONModal from './JSONModal';
 import JSONData from './JSONData';
 import SimpleTable from './SimpleTable';
 
@@ -27,7 +28,11 @@ export default class StackTable extends React.Component {
     _renderLink(cellData, cellDataKey, columnData, rowData) {
         let stackId = columnData[3];
         let s = getStack(this.state.tableRows, stackId);
-        if (cellDataKey == 3) {
+        if (cellDataKey == 1) {
+            return (
+                <JSONModal data={s} title={s.Name} />
+            )
+        } else if (cellDataKey == 3) {
             let cols = {Hostname: 360, Ec2InstanceId: 150, InstanceType: 150, AvailabilityZone: 150, PublicIp: 125, PrivateIp: 125, Status: 100, };
             return (
                 <JSONData cols={cols} data={cellData} account={s.account} title={cellData} />
