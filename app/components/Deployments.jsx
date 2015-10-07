@@ -4,15 +4,15 @@ import Button from 'react-bootstrap/lib/Button';
 import Modal from 'react-bootstrap/lib/Modal';
 import util from 'util';
 
-import SimpleTable from './SimpleTable';
+import DeployTable from './DeployTable';
 
-export default class JSONData extends React.Component {
+export default class Deployments extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             show: false,
             cols: props.cols,
-            api: props.api ? props.api : 'addr',
+            api: 'deploy',
             content: {}
         }
     }
@@ -52,7 +52,7 @@ export default class JSONData extends React.Component {
                         <Modal.Title id='contained-modal-title-lg'>Data Details</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <SimpleTable tableRows={this.state.content} cols={this.state.cols} />
+                        <DeployTable tableRows={this.state.content} cols={this.state.cols} />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.hideModal.bind(this)}>Close</Button>

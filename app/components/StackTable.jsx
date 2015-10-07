@@ -3,10 +3,11 @@ import React from 'react';
 import JSONModal from './JSONModal';
 import JSONData from './JSONData';
 import SimpleTable from './SimpleTable';
+import Deployments from './Deployments';
 
-function getStack(list, stackId) {
+function mapData(list, id) {
     let stacks = list.filter(function(e) {
-        return e.StackId == stackId;
+        return e.StackId == id;
     }).map(function(e) {
         let ne = e;
         ne['account'] = e.DefaultSshKeyName.replace('-master', '');
@@ -27,7 +28,7 @@ export default class StackTable extends React.Component {
 
     _renderLink(cellData, cellDataKey, columnData, rowData) {
         let stackId = columnData[3];
-        let s = getStack(this.state.tableRows, stackId);
+        let s = mapData(this.state.tableRows, stackId);
         if (cellDataKey == 1) {
             let cols = {Hostname: 360, Ec2InstanceId: 150, InstanceType: 150, AvailabilityZone: 150, PublicIp: 125, PrivateIp: 125, Status: 100, };
             return (
@@ -38,10 +39,9 @@ export default class StackTable extends React.Component {
                 <JSONModal data={s} title={stackId} />
             )
         } else if (cellDataKey == 4) {
-            let cols = {DeploymentId: 320, Status: 100, IamUserArn: 100, CreatedAt: 320, Command: 125, Duration: 80};
-            let api = 'deploy';
+            let cols = {DeploymentId: 320, Status: 100, IamUserArn: 100, CreatedAt: 200, Command: 225, Duration: 80};
             return (
-                <JSONData cols={cols} data={stackId} account={s.account} title={s.Name} api={api}/>
+                <Deployments cols={cols} data={stackId} account={s.account} title={s.Name} />
             )
         } else {
             return (
