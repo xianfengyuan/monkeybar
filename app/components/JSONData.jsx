@@ -3,6 +3,8 @@ import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import Button from 'react-bootstrap/lib/Button';
 import Modal from 'react-bootstrap/lib/Modal';
 
+import SimpleTable from './SimpleTable';
+
 export default class JSONData extends React.Component {
     constructor(props) {
         super(props);
@@ -26,6 +28,7 @@ export default class JSONData extends React.Component {
     }
 
     render() {
+        let cols = {Hostname: 200, Ec2InstanceId: 120, InstanceType: 120, AvailabilityZone: 140, PrivateIp: 100, Status: 80, };
         return (
             <ButtonToolbar>
                 <Button bsStyle="link" onClick={this.showModal.bind(this)}><a href="#">{this.props.title}</a></Button>
@@ -34,7 +37,7 @@ export default class JSONData extends React.Component {
                         <Modal.Title id='contained-modal-title-lg'>Data Details</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <pre>{JSON.stringify(this.state.content, null, 2)}</pre>
+                        <SimpleTable tableRows={this.state.content} cols={cols} />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.hideModal.bind(this)}>Close</Button>

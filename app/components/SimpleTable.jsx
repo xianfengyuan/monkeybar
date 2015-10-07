@@ -23,7 +23,7 @@ function getIndex(list, key) {
     return i == list.length ? -1 : i;
 }
 
-export default class DataTable extends React.Component {
+export default class SimpleTable extends React.Component {
     constructor(props) {
         super(props);
         
@@ -40,8 +40,10 @@ export default class DataTable extends React.Component {
             });
             return row;
         });
+        let cellRenderer = props.cellRenderer ? props.cellRenderer : null;
         
         this.state = {
+            cellRenderer: cellRenderer,
             tableRows: props.tableRows,
             rows: rows,
             width: Width,
@@ -127,9 +129,15 @@ export default class DataTable extends React.Component {
         for (; i < this.state.keys.length; i++) {
             let k = this.state.keys[i];
             let label = k + (sortBy === k ? sortDirArrow : '');
-            Columns.push(
-                <Column headerRenderer={this._renderHeader.bind(this, label, k)} label={label} width={this.state.cols[k]} dataKey={i} />
-            );
+            if (this.state.cellRenderer) {
+                Columns.push(
+                    <Column headerRenderer={this._renderHeader.bind(this, label, k)} label={label} width={this.state.cols[k]} dataKey={i} cellRenderer={this.state.cellRenderer.bind(this)} />
+                );
+            } else {
+                Columns.push(
+                    <Column headerRenderer={this._renderHeader.bind(this, label, k)} label={label} width={this.state.cols[k]} dataKey={i} />
+                );
+            }
         }
         
         return (
