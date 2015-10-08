@@ -4,6 +4,7 @@ import aws from 'aws-sdk';
 
 import config from '../configs/config';
 import awscreds from '../configs/secrets';
+import services from '../configs/awservice';
 
 const debug = Debug('awsService');
 
@@ -21,6 +22,34 @@ function getAWS(account, region, service) {
 
 function getOps(account) {
   return getAWS(account, 'us-east-1', 'OpsWorks');
+}
+
+function showAWS(account, region, service, type, id, done) {
+  var ops = getAWS(account, region, service);
+  var params = {};
+  var s = services[service];
+  if (s && s[type]) {
+    if (s[type][3]) {
+      params[s[type][1]] = id;
+    } else {
+      params[s[type][1]] = [id];
+    }
+    getOpsObject(ops, s[type][0], params, function(err, data) {
+      if (err) {
+        return done(err);
+      }
+      done(null, data[s[type][2]]);
+    });
+  } else {
+    var lid = type.split('::')[2];
+    params[lid + 'Ids'] = [id];
+    getOpsObject(ops, 'describe' + lid + 's', params, function(err, data) {
+      if (err) {
+        return done(err);
+      }
+      done(null, data[lid + 's']);
+    });
+  }
 }
 
 function getOpsItem(ops, func, param, collection, attr, val, done) {
@@ -154,6 +183,15 @@ export default {
         return obj;
       });
       done(null, list);
+    });
+  },
+
+  getVpc: function(account, region, id, done) {
+    showAWS(account, region, 'EC2', 'AWS::EC2::VPC', id, function(err, data) {
+      if (err) {
+        return done(err);
+      }
+      done(null, data);
     });
   }
 
