@@ -3,7 +3,7 @@ import React from 'react';
 import hp from '../utils/helpers';
 import JSONModal from './JSONModal';
 import SimpleTable from './SimpleTable';
-import JSONData from './JSONData';
+import IpList from './IpList';
 import Deployments from './Deployments';
 
 function stackF(e) {
@@ -28,7 +28,7 @@ export default class StackTable extends React.Component {
         if (cellDataKey == 1) {
             let cols = {Hostname: 360, Ec2InstanceId: 150, InstanceType: 150, AvailabilityZone: 150, PublicIp: 125, PrivateIp: 125, Status: 100, };
             return (
-                <JSONData cols={cols} data={id} account={s.account} title={s.Name} />
+                <IpList cols={cols} data={id} account={s.account} title={s.Name} />
             )
         } else if (cellDataKey == 3) {
             return (

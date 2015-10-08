@@ -28,7 +28,7 @@ export default class DeployTable extends React.Component {
         };
     }
 
-    _renderLink(cellData, cellDataKey, columnData, rowData) {
+    _renderLink(cellData, cellDataKey, columnData) {
         let id = columnData[0];
         let s = hp.mapData(this.state.tableRows, 'DeploymentId', id, deployF);
         let user = s ? s.user : null;
@@ -57,5 +57,6 @@ export default class DeployTable extends React.Component {
             <SimpleTable tableRows={this.state.tableRows} cols={this.state.cols} cellRenderer={this._renderLink} />
         )
     }
-}
+};
+
 

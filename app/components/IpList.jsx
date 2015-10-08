@@ -5,9 +5,9 @@ import Modal from 'react-bootstrap/lib/Modal';
 import util from 'util';
 
 import hp from '../utils/helpers';
-import DeployTable from './DeployTable';
+import IpTable from './IpTable';
 
-export default class Deployments extends React.Component {
+export default class IpList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -18,7 +18,7 @@ export default class Deployments extends React.Component {
     }
 
     showModal() {
-        hp.getJSON('deploy', this.state.cols, this.props.data, this.props.account, function(data) {
+        hp.getJSON('addr', this.state.cols, this.props.data, this.props.account, function(data) {
             this.setState({
                 content: data.content,
                 cols: data.cols,
@@ -40,7 +40,7 @@ export default class Deployments extends React.Component {
                         <Modal.Title id='contained-modal-title-lg'>Data Details</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <DeployTable tableRows={this.state.content} cols={this.state.cols} />
+                        <IpTable tableRows={this.state.content} cols={this.state.cols} />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.hideModal.bind(this)}>Close</Button>
