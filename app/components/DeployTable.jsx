@@ -1,29 +1,24 @@
 import React from 'react';
 
 import hp from '../utils/helpers';
-import SimpleTable from './SimpleTable';
 import JSONModal from './JSONModal';
+import SimpleTable from './SimpleTable';
 
-function mapData(list, id) {
-    let stacks = list.filter(function(e) {
-        return e.DeploymentId == id;
-    }).map(function(e) {
-        let ne = e;
-        ne['user'] = null;
-        if (e.IamUserArn) {
-            ne.user = e.IamUserArn.replace(/arn[^\/]+\//, '');
-        }
-        let ts = new Date(e.CreatedAt);
-        let date = hp.datestamp(ts.getTime() / 1000);
-        ne['localtime'] = hp.formatZero(ts.getHours()) + ':' +
-             hp.formatZero(ts.getMinutes()) + ':' +
-             hp.formatZero(ts.getSeconds()) + ' ' + date;
-        return ne;
-    });
-    return stacks[0];
+function deployF(e) {
+    let ne = e;
+    ne['user'] = null;
+    if (e.IamUserArn) {
+        ne.user = e.IamUserArn.replace(/arn[^\/]+\//, '');
+    }
+    let ts = new Date(e.CreatedAt);
+    let date = hp.datestamp(ts.getTime() / 1000);
+    ne['localtime'] = hp.formatZero(ts.getHours()) + ':' +
+                      hp.formatZero(ts.getMinutes()) + ':' +
+                      hp.formatZero(ts.getSeconds()) + ' ' + date;
+    return ne;
 }
 
-export default class StackTable extends React.Component {
+export default class DeployTable extends React.Component {
     constructor(props) {
         super(props);
         
@@ -35,9 +30,9 @@ export default class StackTable extends React.Component {
 
     _renderLink(cellData, cellDataKey, columnData, rowData) {
         let id = columnData[0];
-        let s = mapData(this.state.tableRows, id);
-        let user = s.user;
-        let time = s.localtime;
+        let s = hp.mapData(this.state.tableRows, 'DeploymentId', id, deployF);
+        let user = s ? s.user : null;
+        let time = s ? s.localtime : null;
         if (cellDataKey == 0) {
             return (
                 <JSONModal data={s} title={id} />

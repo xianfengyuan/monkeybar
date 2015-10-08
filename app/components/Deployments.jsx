@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/lib/Button';
 import Modal from 'react-bootstrap/lib/Modal';
 import util from 'util';
 
+import hp from '../utils/helpers';
 import DeployTable from './DeployTable';
 
 export default class Deployments extends React.Component {
@@ -18,24 +19,12 @@ export default class Deployments extends React.Component {
     }
 
     showModal() {
-        $.get('/j/' + this.state.api + '/' + this.props.data + '?a=' + this.props.account, function(result) {
-            let key = Object.keys(this.state.cols)[0];
-            if (util.isArray(result) && Object.keys(result[0]).indexOf(key)) {
-                this.setState({
-                    content: result,
-                    show: true
-                });
-            } else {
-                this.setState({
-                    content: [{
-                        message: 'error loading data',
-                        account: this.props.account,
-                        data: this.props.data
-                    }],
-                    cols: {message: 200, data: 400, account: 200},
-                    show: true
-                });
-            }
+        hp.getJSON(this.state.api, this.state.cols, this.props.data, this.props.account, function(data) {
+            this.setState({
+                content: data.content,
+                cols: data.cols,
+                show: true
+            });
         }.bind(this));
     }
 

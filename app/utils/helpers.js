@@ -1,3 +1,5 @@
+import util from 'util';
+
 function formatZero(x) {
   x = "" + x;
   if (x.length == 1) {
@@ -64,6 +66,30 @@ export default {
 	  var month = date.getUTCMonth() + 1;
 	  var day   = date.getUTCDate();
 	  return("" + formatZero(month) + '/' + formatZero(day) + '/' + year);
+  },
+
+  mapData: function(list, name, id, mapF) {
+    let filtered = list.filter(function(e) {
+      return e[name] == id;
+    }).map(mapF);
+    return filtered[0];
+  },
+
+  getJSON: function(api, cols, data, account, done) {
+    $.get('j/' + api + '/' + data + '?a=' + account, function(result) {
+      let key = Object.keys(cols)[0];
+      if (util.isArray(result) && Object.keys(result[0]).indexOf(key)) {
+        done({content: result, cols: cols});
+      } else {
+        done({
+          content: [{
+            message: 'error loading data',
+            account: account,
+            data: data
+          }], cols: {message: 200, data: 400, account: 200}
+        });
+      }
+    });
   }
 
 };

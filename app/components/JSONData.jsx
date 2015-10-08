@@ -4,13 +4,17 @@ import Button from 'react-bootstrap/lib/Button';
 import Modal from 'react-bootstrap/lib/Modal';
 import util from 'util';
 
+import hp from '../utils/helpers';
 import SimpleTable from './SimpleTable';
 
 export default class JSONData extends React.Component {
     constructor(props) {
         super(props);
+        let cellRenderer = props.cellRenderer ? props.cellRenderer : null;
+        
         this.state = {
             show: false,
+            cellRenderer: cellRenderer,
             cols: props.cols,
             api: props.api ? props.api : 'addr',
             content: {}
@@ -18,24 +22,12 @@ export default class JSONData extends React.Component {
     }
 
     showModal() {
-        $.get('/j/' + this.state.api + '/' + this.props.data + '?a=' + this.props.account, function(result) {
-            let key = Object.keys(this.state.cols)[0];
-            if (util.isArray(result) && Object.keys(result[0]).indexOf(key)) {
-                this.setState({
-                    content: result,
-                    show: true
-                });
-            } else {
-                this.setState({
-                    content: [{
-                        message: 'error loading data',
-                        account: this.props.account,
-                        data: this.props.data
-                    }],
-                    cols: {message: 200, data: 400, account: 200},
-                    show: true
-                });
-            }
+        hp.getJSON(this.state.api, this.state.cols, this.props.data, this.props.account, function(data) {
+            this.setState({
+                content: data.content,
+                cols: data.cols,
+                show: true
+            });
         }.bind(this));
     }
 
@@ -44,6 +36,13 @@ export default class JSONData extends React.Component {
     }
 
     render() {
+        let table = (
+            <SimpleTable tableRows={this.state.content} cols={this.state.cols} />
+        );
+        if (this.state.cellRenderer) {
+            table = (<SimpleTable tableRows={this.state.content} cols={this.state.cols} cellRenderer={this.state.cellRenderer.bind(this)}/>);
+        }
+        
         return (
             <ButtonToolbar>
                 <Button bsStyle="link" onClick={this.showModal.bind(this)}><a href="#">{this.props.title}</a></Button>
@@ -52,7 +51,7 @@ export default class JSONData extends React.Component {
                         <Modal.Title id='contained-modal-title-lg'>Data Details</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <SimpleTable tableRows={this.state.content} cols={this.state.cols} />
+                        {table}
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.hideModal.bind(this)}>Close</Button>
