@@ -11,8 +11,9 @@ let routes = {
 
 router.get('/:route/:id', function(req, res) {
   let accounts = req.query.a;
+  let region = req.query.r;
   
-  routes[req.params.route](accounts, req.params.id, function(err, data) {
+  routes[req.params.route](accounts, region, req.params.id, function(err, data) {
     if (err) {
       return res.json(err);
     }

@@ -114,7 +114,7 @@ export default {
   getOpsItems: getOpsItems,
   getOpsItem: getOpsItem,
   
-  opsworks: function(acc, detail, done) {
+  opsworks: function(acc, region, detail, done) {
     let accounts = acc.split(',');
     debug(acc);
     debug(detail);
@@ -150,7 +150,7 @@ export default {
     });
   },
 
-  getAddrByID: function(account, stackId, done) {
+  getAddrByID: function(account, region, stackId, done) {
     let ops = getOps(account);
     getOpsObject(ops, 'describeInstances', {'StackId': stackId}, function(err, data) {
       if (err) {
@@ -167,7 +167,7 @@ export default {
     });
   },
 
-  getDeploy: function(account, stackId, done) {
+  getDeploy: function(account, region, stackId, done) {
     let ops = getOps(account);
     getOpsObject(ops, 'describeDeployments', {'StackId': stackId}, function(err, data) {
       if (err) {

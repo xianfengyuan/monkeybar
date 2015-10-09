@@ -5,9 +5,8 @@ import Modal from 'react-bootstrap/lib/Modal';
 import util from 'util';
 
 import hp from '../utils/helpers';
-import DeployTable from './DeployTable';
 
-export default class Deployments extends React.Component {
+export default class VpcJson extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -18,7 +17,7 @@ export default class Deployments extends React.Component {
     }
 
     showModal() {
-        hp.getJSON('deploy', this.props, function(data) {
+        hp.getJSON('vpc', this.props, function(data) {
             this.setState({
                 content: data.content,
                 cols: data.cols,
@@ -40,7 +39,7 @@ export default class Deployments extends React.Component {
                         <Modal.Title id='contained-modal-title-lg'>Data Details</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <DeployTable tableRows={this.state.content} cols={this.state.cols} />
+                        <pre>{JSON.stringify(this.state.content, null, 2)}</pre>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.hideModal.bind(this)}>Close</Button>

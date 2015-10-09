@@ -4,6 +4,7 @@ import hp from '../utils/helpers';
 import JSONModal from './JSONModal';
 import SimpleTable from './SimpleTable';
 import IpList from './IpList';
+import VpcJson from './VpcJson';
 import Deployments from './Deployments';
 
 function stackF(e) {
@@ -24,11 +25,17 @@ export default class StackTable extends React.Component {
 
     _renderLink(cellData, cellDataKey, columnData, rowData) {
         let id = columnData[3];
+        let region = columnData[0];
         let s = hp.mapData(this.state.tableRows, 'StackId', id, stackF);
         if (cellDataKey == 1) {
             let cols = {Hostname: 360, Ec2InstanceId: 150, InstanceType: 150, AvailabilityZone: 150, PublicIp: 125, PrivateIp: 125, Status: 100, };
             return (
                 <IpList cols={cols} data={id} account={s.account} title={s.Name} />
+            )
+        } else if (cellDataKey == 2) {
+            let cols = {VpcId: 360};
+            return (
+                <VpcJson cols={cols} data={cellData} account={s.account} region={region} title={cellData} />
             )
         } else if (cellDataKey == 3) {
             return (

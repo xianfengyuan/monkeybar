@@ -18,7 +18,7 @@ export default class IpList extends React.Component {
     }
 
     showModal() {
-        hp.getJSON('addr', this.state.cols, this.props.data, this.props.account, function(data) {
+        hp.getJSON('addr', this.props, function(data) {
             this.setState({
                 content: data.content,
                 cols: data.cols,

@@ -1,4 +1,8 @@
-import util from 'util';
+if (!Array.isArray) {
+  Array.isArray = function(arg) {
+    return Object.prototype.toString.call(arg) === '[object Array]';
+  };
+}
 
 function formatZero(x) {
   x = "" + x;
@@ -75,17 +79,18 @@ export default {
     return filtered[0];
   },
 
-  getJSON: function(api, cols, data, account, done) {
-    $.get('j/' + api + '/' + data + '?a=' + account, function(result) {
-      let key = Object.keys(cols)[0];
-      if (util.isArray(result) && Object.keys(result[0]).indexOf(key)) {
-        done({content: result, cols: cols});
+  getJSON: function(api, params, done) {
+    let region = params.region ? params.region : 'us-east-1';
+    $.get('j/' + api + '/' + params.data + '?a=' + params.account + '&r=' + region, function(result) {
+      let key = Object.keys(params.cols)[0];
+      if (Array.isArray(result) && Object.keys(result[0]).indexOf(key) !== -1) {
+        done({content: result, cols: params.cols});
       } else {
         done({
           content: [{
             message: 'error loading data',
-            account: account,
-            data: data
+            account: params.account,
+            data: params.data
           }], cols: {message: 200, data: 400, account: 200}
         });
       }

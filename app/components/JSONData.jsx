@@ -22,7 +22,7 @@ export default class JSONData extends React.Component {
     }
 
     showModal() {
-        hp.getJSON(this.state.api, this.state.cols, this.props.data, this.props.account, function(data) {
+        hp.getJSON(this.state.api, props, function(data) {
             this.setState({
                 content: data.content,
                 cols: data.cols,
