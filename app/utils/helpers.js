@@ -1,3 +1,8 @@
+/**
+ * Copyright 2015, Xianfeng Yuan.
+ * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
+ */
+
 if (!Array.isArray) {
   Array.isArray = function(arg) {
     return Object.prototype.toString.call(arg) === '[object Array]';
@@ -79,6 +84,7 @@ export default {
     return filtered[0];
   },
 
+  // params(account, region, data, cols)
   getJSON: function(api, params, done) {
     let region = params.region ? params.region : 'us-east-1';
     $.get('j/' + api + '/' + params.data + '?a=' + params.account + '&r=' + region, function(result) {

@@ -48,9 +48,14 @@ let fetchAPI = function (params, cb) {
     debug(items.length);
     
     if (items.length) {
+      let nitems = items.map(function(e) {
+        let ne = e;
+        ne.key = e.StackId;
+        return ne;
+      });
       cache[service] = {
         key: service,
-        content: items
+        content: nitems
       };
             
       cb && cb(null, cache[service]);
