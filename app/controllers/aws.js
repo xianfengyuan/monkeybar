@@ -5,6 +5,7 @@ let router = express.Router();
 let routes = {
   stack: aws.opsworks,
   vpc: aws.getVpc,
+  ec2: aws.getEC2,
   deploy: aws.getDeploy,
   addr: aws.getAddrByID
 };

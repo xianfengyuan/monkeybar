@@ -187,12 +187,11 @@ export default {
   },
 
   getVpc: function(account, region, id, done) {
-    showAWS(account, region, 'EC2', 'AWS::EC2::VPC', id, function(err, data) {
-      if (err) {
-        return done(err);
-      }
-      done(null, data);
-    });
-  }
+    showAWS(account, region, 'EC2', 'AWS::EC2::VPC', id, done);
+  },
 
+  getEC2: function(account, region, id, done) {
+    showAWS(account, region, 'EC2', 'AWS::EC2::Instance', id, done);
+  }
+  
 };

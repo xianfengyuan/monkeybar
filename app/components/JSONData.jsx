@@ -10,19 +10,16 @@ import SimpleTable from './SimpleTable';
 export default class JSONData extends React.Component {
     constructor(props) {
         super(props);
-        let cellRenderer = props.cellRenderer ? props.cellRenderer : null;
-        
         this.state = {
             show: false,
-            cellRenderer: cellRenderer,
             cols: props.cols,
-            api: props.api ? props.api : 'addr',
+            api: props.api ? props.api : 'ec2',
             content: {}
         }
     }
 
     showModal() {
-        hp.getJSON(this.state.api, props, function(data) {
+        hp.getJSON(this.state.api, this.props, function(data) {
             this.setState({
                 content: data.content,
                 cols: data.cols,
@@ -36,13 +33,6 @@ export default class JSONData extends React.Component {
     }
 
     render() {
-        let table = (
-            <SimpleTable tableRows={this.state.content} cols={this.state.cols} />
-        );
-        if (this.state.cellRenderer) {
-            table = (<SimpleTable tableRows={this.state.content} cols={this.state.cols} cellRenderer={this.state.cellRenderer.bind(this)}/>);
-        }
-        
         return (
             <ButtonToolbar>
                 <Button bsStyle="link" onClick={this.showModal.bind(this)}><a href="#">{this.props.title}</a></Button>
@@ -51,7 +41,7 @@ export default class JSONData extends React.Component {
                         <Modal.Title id='contained-modal-title-lg'>Data Details</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        {table}
+                        <pre>{JSON.stringify(this.state.content, null, 2)}</pre>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.hideModal.bind(this)}>Close</Button>
