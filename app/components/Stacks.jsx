@@ -21,10 +21,10 @@ class Stacks extends React.Component {
     
     render() {
         let wrapperClasses = cx({
-            'docs-page innerwrapper D(tb)--sm Tbl(f) Pt(20px) Mb(50px) Maw(1000px)--sm Miw(1000px)--lg Mx(a)--sm W(96%)--sm': true
+            'docs-page innerwrapper D(tb)--sm Tbl(f) Pt(20px) Mb(50px) Maw(1380px)--sm Miw(1380px)--lg Mx(a)--sm W(96%)--sm': true
         });
         //let cols = {StackId: 375};
-        let cols = {Region: 125, Name: 240, VpcId: 125, StackId: 320, Deployments: 125};
+        let cols = {Region: 125, Name: 200, VpcId: 125, Bastion: 125, NAT: 125, StackId: 320, Deployments: 200};
         return (
             <div className={wrapperClasses}>
                 <StackTable tableRows={this.state.stacks} cols={cols} />

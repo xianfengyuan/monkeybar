@@ -14,6 +14,7 @@
     "lint"
   ],
   "dependencies": {
+    "async": "^1.4.2",
     "atomizer": "^3.1.0",
     "aws-sdk": "^2.2.5",
     "babel": "^4.7.8",

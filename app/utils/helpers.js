@@ -80,7 +80,10 @@ export default {
   mapData: function(list, name, id, mapF) {
     let filtered = list.filter(function(e) {
       return e[name] == id;
-    }).map(mapF);
+    });
+    if (mapF) {
+      filtered = filtered.map(mapF);
+    }
     return filtered[0];
   },
 

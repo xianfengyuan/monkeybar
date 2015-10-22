@@ -1,13 +1,20 @@
+/**
+ * Copyright 2015, Xianfeng Yuan.
+ * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
+ */
+
 import express from 'express';
 import aws from '../services/aws';
 
 let router = express.Router();
 let routes = {
-  stack: aws.opsworks,
-  vpc: aws.getVpc,
-  ec2: aws.getEC2,
-  deploy: aws.getDeploy,
-  addr: aws.getAddrByID
+  stack:   aws.opsworks,
+  vpc:     aws.getVpc,
+  ec2:     aws.getEC2,
+  deploy:  aws.getDeploy,
+  addr:    aws.getAddrByID,
+  nat:     aws.getNATByID,
+  bastion: aws.getBastionByID
 };
 
 router.get('/:route/:id', function(req, res) {

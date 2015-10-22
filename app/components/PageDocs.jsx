@@ -33,7 +33,7 @@ class PageDocs extends React.Component {
     render() {
         let wrapperClasses = cx({
             'menu-on': this.state.isMenuVisible,
-            'docs-page innerwrapper D(tb)--sm Tbl(f) Pt(20px) Mb(50px) Maw(1200px)--sm Miw(1200px)--lg Mx(a)--sm W(96%)--sm': true
+            'docs-page innerwrapper D(tb)--sm Tbl(f) Pt(20px) Mb(50px) Maw(1400px)--sm Miw(1400px)--lg Mx(a)--sm W(96%)--sm': true
         });
 
         return (

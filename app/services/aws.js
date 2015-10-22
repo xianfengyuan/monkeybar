@@ -1,6 +1,12 @@
+/**
+ * Copyright 2015, Xianfeng Yuan.
+ * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
+ */
+
 import Debug from 'debug';
 import fs from 'fs';
 import aws from 'aws-sdk';
+import async from 'async';
 
 import config from '../configs/config';
 import awscreds from '../configs/secrets';
@@ -11,6 +17,17 @@ const debug = Debug('awsService');
 String.prototype.inList = function (list) {
    return (list.indexOf(this.toString()) !== -1);
 };
+
+function isObjectInList(obj, list, key) {
+  var ret = false;
+  for (var i = 0; i < list.length; i++) {
+    if (list[i][key] === obj[key]) {
+      ret = true;
+      break;
+    }
+  }
+  return ret;
+}
 
 function getAWS(account, region, service) {
   let creds = awscreds[account];
@@ -25,9 +42,9 @@ function getOps(account) {
 }
 
 function showAWS(account, region, service, type, id, done) {
-  var ops = getAWS(account, region, service);
-  var params = {};
-  var s = services[service];
+  let ops = getAWS(account, region, service);
+  let params = {};
+  let s = services[service];
   if (s && s[type]) {
     if (s[type][3]) {
       params[s[type][1]] = id;
@@ -41,7 +58,7 @@ function showAWS(account, region, service, type, id, done) {
       done(null, data[s[type][2]]);
     });
   } else {
-    var lid = type.split('::')[2];
+    let lid = type.split('::')[2];
     params[lid + 'Ids'] = [id];
     getOpsObject(ops, 'describe' + lid + 's', params, function(err, data) {
       if (err) {
@@ -107,6 +124,95 @@ function getOpsObject(ops, func, param, done) {
   });
 }
 
+function getAttrBy(account, region, ec2, attr, done) {
+  showAWS(account, region, 'EC2', 'AWS::EC2::Instance', ec2, function(err, data) {
+    if (err) {
+      return done(err);
+    }
+    done(null, data[0].Instances[0][attr]);
+  });
+}
+
+function getBastion(account, region, ec2, done) {
+  getAttrBy(account, region, ec2, 'VpcId', function(err, vpc) {
+    if (err) {
+      return done(err);
+    }
+
+    let ops = getAWS(account, region, 'EC2');
+    let tags = ['opsworks:layer:bastion_host=bastion_host', 'aws:cloudformation:logical-id=BastionHost'];
+    async.map(tags, function(tag, done) {
+      let tp = tag.split('=');
+      getOpsObject(ops,
+                   'describeInstances',
+                   {Filters: [{Name: 'vpc-id', Values: [vpc]}, {Name: 'tag:'+tp[0], Values: [tp[1]]}]}, done
+                  );
+    }, function(err, results) {
+      if (err) {
+        return done(err);
+      }
+
+      let ilist = [];
+      for (let i = 0; i < results.length; i++) {
+        if (results[i] && results[i].Reservations) {
+          for (let j = 0; j < results[i].Reservations.length; j++) {
+            ilist = ilist.concat(results[i].Reservations[j].Instances);
+          }
+        }
+      }
+      done(null, ilist);
+    }); //tags
+  }); //vpc
+}
+
+function getSubNAT(account, region, subnetId, done) {
+  var ops = getAWS(account, region, 'EC2');
+  getOpsObject(ops, 'describeRouteTables', {
+    Filters: [{Name: 'association.subnet-id', Values: [subnetId]}]
+  }, function(err, data) {
+    if (err) {
+      return done(err);
+    }
+    
+    if (data === undefined || !data.RouteTables.length) {
+      return done({message: 'no routes found: ' + subnetId});
+    }
+    
+    var vpc = data.RouteTables[0].VpcId;
+    var routes = data.RouteTables[0].Routes.filter(function(e) {
+      return e.DestinationCidrBlock.match('0.0.0.0/0');
+    });
+    if (!routes.length) {
+      return done({vpc: vpc, message: 'no default route found: ' + JSON.stringify(data.RouteTables[0])});
+    }
+    
+    if ('GatewayId' in routes[0] && routes[0].GatewayId.match('igw')) {
+      getOpsObject(ops, 'describeInternetGateways', {InternetGatewayIds: [routes[0].GatewayId]}, function(err, data) {
+        if (err) {
+          return done(err);
+        }
+        var tag = data.InternetGateways[0].Tags.filter(function(t) {
+          return t.Key.match('aws:cloudformation:stack-name');
+        });
+        return done({vpc: vpc, message: 'Traffic routes through internat gateway in cloudformation stack: '+tag[0].Value});
+      });
+    } else if ('InstanceId' in routes[0]) {
+      getOpsObject(ops, 'describeInstances', {InstanceIds: [routes[0].InstanceId]}, function(err, data) {
+        if (err) {
+          return done(err);
+        }
+        var ilist = null;
+        if (data.Reservations) {
+          if (data.Reservations[0].Instances.length) {
+            ilist = data.Reservations[0].Instances[0];
+          }
+        }
+        done(null, ilist);
+      });
+    }
+  });
+}
+
 export default {
   getAWS: getAWS,
   getOps: getOps,
@@ -167,6 +273,85 @@ export default {
     });
   },
 
+  getNATByID: function(account, region, stackId, done) {
+    var ops = getOps(account);
+    
+    getOpsObject(ops, 'describeInstances', {'StackId': stackId}, function(err, data) {
+      if (err) {
+        return done(err);
+      }
+      
+      if (!data.Instances.length) {
+        return done({message: 'no instance found in stack: ' + stackId});
+      }
+        
+      var subs = {};
+      data.Instances.forEach(function(e) {
+        var sub = e.SubnetId;
+        if (e.ElasticIp || e.PublicIp) {
+          return;
+        }
+
+        if (subs[sub] === undefined) {
+          subs[sub] = [e];
+        } else {
+          subs[sub].push(e);
+        }
+      });
+      async.map(Object.keys(subs), function(sub, done) {
+        getSubNAT(account, region, sub, done);
+      }, function(err, data) {
+        if (err) {
+          return done(err);
+        }
+        var ilist = [];
+        for (var i = 0; i < data.length; i++) {
+          if (!isObjectInList(data[i], ilist, 'InstanceId')) {
+            ilist.push(data[i]);
+          }
+        }
+        if (!ilist.length) {
+          return done({message: 'no NAT host found in stack: ' + stackId});
+        }
+        done(null, ilist);
+      });
+    });
+  },
+
+  getBastionByID: function(account, region, stackId, done) {
+    let ops = getOps(account);
+    getOpsObject(ops, 'describeInstances', {'StackId': stackId}, function(err, data) {
+      if (err) {
+        return done(err);
+      }
+      
+      if (!data.Instances.length) {
+        return done({message: 'no instance found in stack: ' + stackId});
+      }
+
+      let ec2list = [];
+      data.Instances.forEach(function(e) {
+        if (e.Status.match('(online|setup_failed)')) {
+          ec2list.push(e.Ec2InstanceId);
+        }
+      });
+      if (!ec2list.length) {
+        return done({message: 'no online instance found in stack: ' + stackId});
+      }
+
+      getBastion(account, region, ec2list[0], function(err, data) {
+        if (err) {
+          return done(err);
+        }
+        
+        if (!data.length) {
+          return done({message: 'no bastion host found in stack: ' + stackId});
+        }
+        done(null, data);
+      });
+    });
+  },
+  
   getDeploy: function(account, region, stackId, done) {
     let ops = getOps(account);
     getOpsObject(ops, 'describeDeployments', {'StackId': stackId}, function(err, data) {
