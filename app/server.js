@@ -31,7 +31,7 @@ import argv from 'minimist';
 const ARGS = argv(process.argv.slice(2));
 const HTML = React.createFactory(Html);
 const SERVER = express();
-const PORT = argv.port || process.env.PORT || 8081;
+const PORT = argv.port || process.env.NODE_PORT || 8081;
 const DEV = argv.dev || false;
 const DOC_TYPE = [
       '<!DOCTYPE html>',
