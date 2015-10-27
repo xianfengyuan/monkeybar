@@ -43,4 +43,4 @@ grasshopper.json
 .validate.json
 
 # custom config files
-secrets.js
+#secrets.js
