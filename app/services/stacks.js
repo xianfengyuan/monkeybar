@@ -34,7 +34,7 @@ let fetchAPI = function (params, cb) {
 
     let fcache = JSON.parse(data);
     
-    let alist = ['gindevpower', 'ginprodpower'];
+    let alist = ['dev'];
     let items = [];
     alist.forEach(function(e) {
       if (fcache && fcache.cache && fcache.cache[e]) {
