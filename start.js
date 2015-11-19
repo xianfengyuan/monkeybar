@@ -5,6 +5,7 @@
 
 // this file is mainly used to register babel
 // since the file that registers babel cannot be es6-ified
+
 process.chdir(__dirname);
 
 require('babel/register');
