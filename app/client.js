@@ -5,6 +5,7 @@
 /*global document, window */
 
 // external packages
+
 import React from 'react';
 
 // other dependencies
